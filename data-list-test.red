@@ -512,36 +512,146 @@ Red [
 ===end-group===
 
 ===start-group=== "subsequences"
---test-- "[integer!] -> [integer!]"
-    xs: [1 2]
-    ys: [[] [1] [2] [1 2] [3] [1 3] [2 3] [1 2 3]]
-    ;zs: subsequences xs
-    ;--assert* [ys == zs]
-    print mold (subsequences [1 2])
 
---test-- "string! -> string!"
-    xs: "abc"
-    ys: "bc"
-    zs: filter func [x][x > #"a"] xs
-    --assert* [ys == zs]
-
---test-- "block! -> block!"
-    xs: [1 "2" 3 "4" 5 "6"]
-    ys1: [1 3 5]
-    ys2: ["2" "4" "6"]
-    zs1: filter :integer? xs
-    zs2: filter :string? xs
+--test-- "[integer!] -> [[integer!]]"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3]
+    ys1: [[]]
+    ys2: [[] [1]]
+    ys3: [[] [1] [2] [1 2]]
+    ys4: [[] [1] [2] [1 2] [3] [1 3] [2 3] [1 2 3]]
+    zs1: subsequences xs1
+    zs2: subsequences xs2
+    zs3: subsequences xs3
+    zs4: subsequences xs4
     --assert* [ys1 == zs1]
     --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
 
---test-- "[[integer!]] -> [[integer!]]"
-    xs: [[1] [1 2] [1 2 3]]
-    ys1: [[1]]
-    ys2: [[1 2] [1 2 3]]
-    zs1: filter func [x][2 > length? x] xs
-    zs2: filter func [x][2 <= length? x] xs
+--test-- "[string!] -> [[string!]]"
+    xs1: []
+    xs2: ["1"]
+    xs3: ["1" "2"]
+    xs4: ["1" "2" "3"]
+    ys1: [[]]
+    ys2: [[] ["1"]]
+    ys3: [[] ["1"] ["2"] ["1" "2"]]
+    ys4: [[] ["1"] ["2"] ["1" "2"] ["3"] ["1" "3"] ["2" "3"] ["1" "2" "3"]]
+    zs1: subsequences xs1
+    zs2: subsequences xs2
+    zs3: subsequences xs3
+    zs4: subsequences xs4
     --assert* [ys1 == zs1]
     --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "[string! | integer!] -> [[string! | integer!]]"
+    xs1: []
+    xs2: ["1"]
+    xs3: ["1" 2]
+    xs4: ["1" 2 "3"]
+    ys1: [[]]
+    ys2: [[] ["1"]]
+    ys3: [[] ["1"] [2] ["1" 2]]
+    ys4: [[] ["1"] [2] ["1" 2] ["3"] ["1" "3"] [2 "3"] ["1" 2 "3"]]
+    zs1: subsequences xs1
+    zs2: subsequences xs2
+    zs3: subsequences xs3
+    zs4: subsequences xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [[string!]"
+    xs1: ""
+    xs2: "ab"
+    xs3: "abc"
+    ys1: [""]
+    ys2: ["" "a" "b" "ab"]
+    ys3: ["" "a" "b" "ab" "c" "ac" "bc" "abc"]
+    zs1: subsequences xs1
+    zs2: subsequences xs2
+    zs3: subsequences xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+===end-group===
+
+===start-group=== "permutations"
+
+--test-- "[integer!] -> [[integer!]]"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3]
+    ys1: [[]]
+    ys2: [[1]]
+    ys3: [[1 2] [2 1]]
+    ys4: [[1 2 3] [2 1 3] [2 3 1] [1 3 2] [3 1 2] [3 2 1]]
+    zs1: permutations xs1
+    zs2: permutations xs2
+    zs3: permutations xs3
+    zs4: permutations xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "[string!] -> [[string!]]"
+    xs1: []
+    xs2: ["1"]
+    xs3: ["1" "2"]
+    xs4: ["1" "2" "3"]
+    ys1: [[]]
+    ys2: [["1"]]
+    ys3: [["1" "2"] ["2" "1"]]
+    ys4: [["1" "2" "3"] ["2" "1" "3"] ["2" "3" "1"] ["1" "3" "2"] ["3" "1" "2"] ["3" "2" "1"]]
+    zs1: permutations xs1
+    zs2: permutations xs2
+    zs3: permutations xs3
+    zs4: permutations xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "[string! | integer!] -> [[string! | integer!]]"
+    xs1: []
+    xs2: ["1"]
+    xs3: ["1" 2]
+    xs4: ["1" 2 "3"]
+    ys1: [[]]
+    ys2: [["1"]]
+    ys3: [["1" 2] [2 "1"]]
+    ys4: [["1" 2 "3"] [2 "1" "3"] [2 "3" "1"] ["1" "3" 2] ["3" "1" 2] ["3" 2 "1"]]
+    zs1: permutations xs1
+    zs2: permutations xs2
+    zs3: permutations xs3
+    zs4: permutations xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [[string!]"
+    xs1: ""
+    xs2: "ab"
+    xs3: "abc"
+    ys1: [""]
+    ys2: ["ab" "ba"]
+    ys3: ["abc" "bac" "bca" "acb" "cab" "cba"]
+    zs1: permutations xs1
+    zs2: permutations xs2
+    zs3: permutations xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
 
 ===end-group===
 
@@ -677,6 +787,147 @@ Red [
     yss: [[[[3 7]]] [[[7 11]]]]
     zss: reduce-deep xss
     --assert* [yss == zss]
+===end-group===
+
+===start-group=== "foldl"
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 1"
+    xs: [1 2 3]
+    ys: 6
+    f: func [y x][x + y]
+    zs: foldl :f 0 xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 2"
+    xs: [1 2 3 4]
+    ys: 24
+    f: func [y x][x * y]
+    zs: foldl :f 1 xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 3"
+    xs: [1 2 3 4]
+    ys: [[1] [2] [3] [4]]
+    f: func [y x][y ++ (reduce [reduce [x]])]
+    zs: foldl :f [] xs
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "foldl1"
+--test-- "(a -> a -> a) -> [a] -> a 1"
+    xs1: []
+    xs2: [1 2 3]
+    ys1: none
+    ys2: 6
+    f: func [y x][x + y]
+    zs1: foldl1 :f xs1
+    zs1: foldl1 :f xs2
+    --assert* [ys == zs]
+
+--test-- "(a -> a -> a) -> [a] -> a 2"
+    xs: [1 2 3 4]
+    ys: 24
+    f: func [y x][x * y]
+    zs: foldl1 :f xs
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "foldr"
+
+--test-- "(a -> b -> a) -> a -> [b] -> a 1"
+    xs: [1 2 3]
+    ys: 6
+    f: func [x y][x + y]
+    zs: foldr :f 0 xs
+    --assert* [ys == zs]
+
+--test-- "(a -> b -> a) -> a -> [b] -> a 2"
+    xs: [1 2 3 4]
+    ys: 24
+    f: func [x y][x * y]
+    zs: foldr :f 1 xs
+    --assert* [ys == zs]
+
+--test-- "(a -> b -> a) -> a -> [b] -> a 3"
+    xs: [1 2 3 4]
+    ys: [[1] [2] [3] [4]]
+    f: func [x y][(reduce [reduce [x]]) ++ y]
+    zs: foldr :f [] xs
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "foldr1"
+--test-- "(a -> a -> a) -> [a] -> a 1"
+    xs1: []
+    xs2: [1 2 3]
+    ys1: none
+    ys2: 6
+    f: func [x y][x + y]
+    zs1: foldr1 :f xs1
+    zs2: foldr1 :f xs2
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+--test-- "(a -> a -> a) -> [a] -> a 2"
+    xs: ["1" "2" "3" "4"]
+    ys: "1234"
+    f: func [x y][ x ++ y]
+    zs: foldr1 :f xs
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "concat"
+--test-- "[[integer!]] -> [integer!]"
+    xs1: []
+    xs2: [[1] [2] [3]]
+    ys1: []
+    ys2: [1 2 3]
+    zs1: concat xs1
+    zs2: concat xs2
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+--test-- "[[string!]] -> [string!]"
+    xs1: []
+    xs2: [["1"] ["2"] ["3"]]
+    ys1: []
+    ys2: ["1" "2" "3"]
+    zs1: concat xs1
+    zs2: concat xs2
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+--test-- "[string!] -> string!"
+    xs: ["1" "2" "3"]
+    ys: "123"
+    zs: concat xs
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "concatMap"
+--test-- "(integer! -> [integer!]) -> [integer!] -> [integer!]"
+    xs: [1 2 3]
+    ys: [1 2 3]
+    zs: concatMap func [x][reduce [x]] xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> [string!]) -> [string!] -> [string!]"
+    xs: ["1" "2" "3"]
+    ys: ["1" "2" "3"]
+    zs: concatMap func [x][reduce [x]] xs
+    --assert* [ys == zs]
+
+--test-- "(character! -> string!) -> string! -> string!"
+    xs: "abc"
+    ys: "aabbcc"
+    zs: concatMap func [x][reduce [to-string x to-string x]] xs
+    --assert* [ys == zs]
+
 ===end-group===
 
 ~~~end-file~~~

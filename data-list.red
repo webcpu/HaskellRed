@@ -103,24 +103,6 @@ length: function [
     length? xs
 ]
 
-foldl: function [
-    "reduces the list using the binary operator, from left to right"
-    f
-    y
-    xs
-][
-    either empty? xs [y][foreach x xs [f y x]]
-]
-
-foldr: function [
-    "reduces the list using the binary operator, from right to left"
-    g
-    y
-    xs
-][
-    either empty? xs [y][foreach x (reverse xs) [g x y]]
-]
-
 map: function [
     "applying f to each element of xs"
     f
@@ -202,17 +184,11 @@ subsequences: function [
     ]
 ]
 
-string-subsequences: function [
-    xs
-][
-    return reduce [xs]
-]
-
 block-subsequences: function [
     xs
 ][
     either (empty? xs) [
-        [[]]
+        copy [[]]
     ][
         append (copy [[]]) non-empty-block-subsequences xs
     ]
@@ -221,41 +197,228 @@ block-subsequences: function [
 non-empty-block-subsequences: function [
     xs
 ][
-    either empty? xs [[]][non-empty-block-subsequences* xs]
+    either empty? xs [copy []][non-empty-block-subsequences* xs]
 ]
 
 non-empty-block-subsequences*: function [
     xs
 ][
     g: function [ys r][
-        print "m++++++++++++"
         m1: reduce [ys] 
         m2: reduce [(reduce [first xs]) ++ ys]
         m3: r
-        print mold m1
-        print mold m2
-        print mold m3
-        m: (copy m1) ++ m2 ++ m3
-        print mold m
-        print "m------------"
-        m
+        (m1 ++ m2) ++ m3
     ]
 
     r0: (reduce [reduce [first xs]])
-    print "+++++++++++++++++++"
-    bs: reduce (non-empty-block-subsequences (rest xs))
-    print "+block-sequences+"
-    print mold bs
-    print "-block-sequences-"
-    r1: foldr :g [] bs
-  
-    print "r++++++++++++"
-    print mold r0
-    print mold r1
-    print mold (append r0 r1)
-    print "r------------"
-    print "-------------------"
-    append (copy r0) r1
+    r1: foldr :g [] (non-empty-block-subsequences (rest xs))
+    
+    r0 ++ r1
+]
+
+string-subsequences: function [
+    xs
+][
+    either (empty? xs) [
+        copy [""]
+    ][
+        non-empty-string-subsequences xs
+    ]
+]
+
+non-empty-string-subsequences: function [
+    xs
+][
+    either empty? xs [copy []][non-empty-string-subsequences* xs]
+]
+
+non-empty-string-subsequences*: function [
+    xs
+][
+    g: function [ys r][
+        m1: reduce [ys] 
+        m2: reduce [(to-string first xs) ++ ys]
+        m3: r
+        (m1 ++ m2) ++ m3
+    ]
+
+    r0: (reduce [to-string first xs])
+    r1: foldr :g [] (non-empty-string-subsequences (rest xs))
+    
+    r0 ++ r1
+]
+
+permutations: function [
+    "returns the list of all permutations of the argument." 
+    xs
+][
+    case [
+        (not series? xs) none
+        (empty? xs) (reduce [xs])
+        (block? xs) (block-permutations xs)
+        (string? xs) (string-permutations xs)
+    ]
+]
+
+block-permutations: function [
+    xs
+][
+    either empty? xs [
+        copy [[]] ; Don't use []
+    ][
+        ys: block-permutations (rest xs)
+        f: func [zs][block-between (first xs) zs]
+        g: func [zs x][zs ++ x]
+        foldl :g [] (map :f ys)
+    ]
+]
+
+block-between: function [
+    x
+    ys
+][
+    either (empty? ys) [reduce [reduce [x]]][block-between* x ys]
+]
+
+block-between*: function [
+    x
+    ys
+][
+    m1: (reduce [(reduce [x]) ++ ys])
+
+    f: func [y][reduce [first ys] ++ y] 
+    zs: block-between x (rest ys)
+    m2: map :f zs
+    m1 ++ m2
+]
+
+string-permutations: function [
+    xs
+][
+    either empty? xs [
+        copy [""] ; Don't use []
+    ][
+        ys: block-permutations (rest xs)
+        f: func [zs][string-between (first xs) zs]
+        g: func [zs x][zs ++ x]
+        foldl :g [] (map :f ys)
+    ]
+]
+
+string-between: function [
+    x
+    ys
+][
+    either (empty? ys) [reduce [to-string x]][string-between* x ys]
+]
+
+string-between*: function [
+    x
+    ys
+][
+    m1: (reduce [(to-string x) ++ ys])
+
+    f: func [y][(to-string (first ys)) ++ y] 
+    zs: string-between x (rest ys)
+    m2: map :f zs
+    m1 ++ m2
+]
+
+foldl: function [
+    "reduces the list using the binary operator, from left to right"
+    f
+    y
+    xs
+][
+    either empty? xs [y][
+        r: y
+        foreach x xs [r: f r x]
+        r
+    ]
+]
+
+"(a -> a -> a) -> [a] -> a"
+foldl1: function [
+    "A variant of foldl that has no base case, and thus may only be applied to non-empty structures."
+    f
+    xs
+][
+    either empty? xs [none][foldl :f (first xs) (rest xs)]
+]
+
+foldr: function [
+    "reduces the list using the binary operator, from right to left"
+    g
+    y
+    xs
+][
+    either empty? xs [
+        y
+    ][
+        r: y
+        foreach x (reverse xs) [r: g x r]
+        r
+    ]
+]
+
+;"(a -> a -> a) -> [a] -> a"
+foldr1: function [
+    "A variant of foldr that has no base case, and thus may only be applied to non-empty structures."
+    f
+    xs
+][
+    either empty? xs [none][foldr :f (last xs) (most xs)]
+]
+
+concat: function [
+    "The concatenation of all the elements of a container of lists."
+    xs
+][
+    either (all map :string? xs) [
+        string-concat xs
+    ][
+        block-concat xs
+    ]
+]
+
+block-concat: function [
+    xs
+][
+    f: func [y x][y ++ x]
+    foldl :f [] xs
+]
+
+string-concat: function [
+    xs
+][
+    f: func [y x][y ++ x]
+    foldl1 :f xs
+]
+
+concatMap: function [
+    "Map a function over all the elements of a container and concatenate the resulting lists."
+    f
+    xs
+][
+    either (all map :string? xs) [
+        string-concatMap :f xs
+    ][
+        block-concatMap :f xs
+    ]
+]
+
+string-concatMap: function [
+    f
+    xs
+][
+    concat (map :f xs)
+]
+
+block-concatMap: function [
+    f
+    xs
+][
+    concat (map :f xs)
 ]
 
 filter: function [
