@@ -1,0 +1,3 @@
+#!/bin/bash
+clear
+time /usr/local/bin/red --cli ./data-list-test.red
