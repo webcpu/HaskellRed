@@ -541,7 +541,7 @@ replicate: function [
     xs 
 ]
 
-Take: func [
+take': func [
     "applied to a list xs, returns the prefix of xs of length n, or xs itself if n > length? xs"
     n [integer!]
     xs [series!]
@@ -598,7 +598,7 @@ splitAt: function [
     n [integer!]
     xs [series!]
 ][
-    reduce [(Take n xs) (drop n xs)]
+    reduce [(take' n xs) (drop n xs)]
 ]
 
 takeWhile: function [
@@ -651,7 +651,7 @@ span: function [
     reduce [(takeWhile :p xs) (dropWhile :p xs)]
 ]
 
-Break: function [
+break': function [
     "applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that do not satisfy p and second element is the remainder of the list"
     p [function! native!]
     xs [series!]
@@ -672,7 +672,7 @@ stripPrefix*: function [
     ys [series!]
 ][
     n: length? xs
-    either xs == (take n ys) [drop n ys][Nothing]
+    either xs == (take' n ys) [drop n ys][Nothing]
 ]
 
 group: function [
@@ -680,6 +680,23 @@ group: function [
     xs [series!]
 ][
     groupBy func [y x][y == x] xs
+]
+
+inits: function [
+    "returns all initial segments of the argument, shortest first."
+    xs [series!]
+][
+    xss: either string? xs [[""]][[[]]]
+    to-series: func [x][either (char? x) [to-string x][reduce [x]]]
+    f: func [yss x][yss: yss ++ [(last yss) ++ (to-series x)]]
+    foldl :f xss xs
+]
+
+tails: function [
+    "returns all final segments of the argument, longest first."
+    xs [series!]
+][
+    reverse (map :reverse (inits (reverse xs)))
 ]
 
 groupBy: function [

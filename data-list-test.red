@@ -1168,7 +1168,7 @@ Red [
 
 ===end-group===
 
-===start-group=== "Take"
+===start-group=== "take'"
 
 --test-- "integer! -> integer! -> [any-type!]"
     xs:  [1 2 3]
@@ -1177,11 +1177,11 @@ Red [
     ys3: [1 2]
     ys4: [1 2 3]
     ys5: [1 2 3]
-    zs1: Take 0 xs
-    zs2: Take 1 xs
-    zs3: Take 2 xs
-    zs4: Take 3 xs
-    zs5: Take 4 xs
+    zs1: take' 0 xs
+    zs2: take' 1 xs
+    zs3: take' 2 xs
+    zs4: take' 3 xs
+    zs5: take' 4 xs
     --assert* [ys1 == zs1]
     --assert* [ys2 == zs2]
     --assert* [ys3 == zs3]
@@ -1195,11 +1195,11 @@ Red [
     ys3: "ab" 
     ys4: "abc"
     ys5: "abc"
-    zs1: Take 0 xs
-    zs2: Take 1 xs
-    zs3: Take 2 xs
-    zs4: Take 3 xs
-    zs5: Take 4 xs
+    zs1: take' 0 xs
+    zs2: take' 1 xs
+    zs3: take' 2 xs
+    zs4: take' 3 xs
+    zs5: take' 4 xs
     --assert* [ys1 == zs1]
     --assert* [ys2 == zs2]
     --assert* [ys3 == zs3]
@@ -1235,11 +1235,11 @@ Red [
     ys3: "ab" 
     ys4: "abc"
     ys5: "abc"
-    zs1: Take 0 xs
-    zs2: Take 1 xs
-    zs3: Take 2 xs
-    zs4: Take 3 xs
-    zs5: Take 4 xs
+    zs1: take' 0 xs
+    zs2: take' 1 xs
+    zs3: take' 2 xs
+    zs4: take' 3 xs
+    zs5: take' 4 xs
     --assert* [ys1 == zs1]
     --assert* [ys2 == zs2]
     --assert* [ys3 == zs3]
@@ -1457,16 +1457,16 @@ Red [
     ys3: [[1 2] [3]]
     ys4: [[1 2 3] []]
     ys5: [[1 2 3] []]
-    ; zs1: break' :positive? xs
-    ; zs2: break' func [x][x > 1] xs
-    ; zs3: break' func [x][x > 2] xs
-    ; zs4: break' func [x][x > 3] xs
-    ; zs5: break' func [x][x > 4] xs
-    ; --assert* [ys1 == zs1]
-    ; --assert* [ys2 == zs2]
-    ; --assert* [ys3 == zs3]
-    ; --assert* [ys4 == zs4]
-    ; --assert* [ys5 == zs5]
+    zs1: break' :positive? xs
+    zs2: break' func [x][x > 1] xs
+    zs3: break' func [x][x > 2] xs
+    zs4: break' func [x][x > 3] xs
+    zs5: break' func [x][x > 4] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
 
 --test-- "(char! -> logic!) -> string! -> [[string!]]"
     xs:  "abc"
@@ -1474,17 +1474,17 @@ Red [
     ys2: ["a" "bc"]
     ys3: ["ab" "c"]
     ys4: ["abc" ""]
-;    ys5: ["abc" ""]
-    ; zs1: break' func [x][x >= #"a"] xs
-    ; zs2: break' func [x][x >= #"b"] xs
-    ; zs3: break' func [x][x >= #"c"] xs
-    ; zs4: break' func [x][x >= #"d"] xs
-    ; zs5: break' func [x][x >= #"e"] xs
-    ; --assert* [ys1 == zs1]
-    ; --assert* [ys2 == zs2]
-    ; --assert* [ys3 == zs3]
-    ; --assert* [ys4 == zs4]
-    ; --assert* [ys5 == zs5]
+    ys5: ["abc" ""]
+    zs1: break' func [x][x >= #"a"] xs
+    zs2: break' func [x][x >= #"b"] xs
+    zs3: break' func [x][x >= #"c"] xs
+    zs4: break' func [x][x >= #"d"] xs
+    zs5: break' func [x][x >= #"e"] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
 
 ===end-group===
 
@@ -1531,7 +1531,7 @@ Red [
 ===start-group=== "group"
 
 --test-- "[integer!] -> [[integer!]"
-     xs1: []
+    xs1: []
     xs2: [1]
     xs3: [1 2]
     xs4: [1 2 3 3 2]
@@ -1573,6 +1573,86 @@ Red [
     --assert* [ys3 == zs3]
     --assert* [ys4 == zs4]
     --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "inits"
+
+--test-- "[integer!] -> [[integer!]"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3]
+    ys1: [[]]
+    ys2: [[] [1]]
+    ys3: [[] [1] [1 2]]
+    ys4: [[] [1] [1 2] [1 2 3]]
+    zs1: inits xs1
+    zs2: inits xs2
+    zs3: inits xs3
+    zs4: inits xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [string!]"
+    xs1: ""
+    xs2: "a"
+    xs3: "ab"
+    xs4: "abc"
+    ys1: [""]
+    ys2: ["" "a"]
+    ys3: ["" "a" "ab"]
+    ys4: ["" "a" "ab" "abc"]
+    zs1: inits xs1
+    zs2: inits xs2
+    zs3: inits xs3
+    zs4: inits xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+===end-group===
+
+===start-group=== "tails"
+
+--test-- "[integer!] -> [[integer!]"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3]
+    ys1: [[]]
+    ys2: [[1] []]
+    ys3: [[1 2] [2] []]
+    ys4: [[1 2 3] [2 3] [3] []]
+    zs1: tails xs1
+    zs2: tails xs2
+    zs3: tails xs3
+    zs4: tails xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [string!]"
+    xs1: ""
+    xs2: "a"
+    xs3: "ab"
+    xs4: "abc"
+    ys1: [""]
+    ys2: ["a" ""]
+    ys3: ["ab" "b" ""]
+    ys4: ["abc" "bc" "c" ""]
+    zs1: tails xs1
+    zs2: tails xs2
+    zs3: tails xs3
+    zs4: tails xs4
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
 
 ===end-group===
 
