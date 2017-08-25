@@ -104,7 +104,6 @@ Red [
     xs2: [1 2 3]
     ys: [12 10 18]
     zs: xs1 * xs2
-    print "==========="
     --assert* [ys == zs]
 
 --test-- "[integer!] -> [integer!] -> [integer!] 3"
@@ -402,16 +401,16 @@ Red [
 --test-- "string! -> string!"
     xs: "abc"
     ys: "ABC"
-    f: func [x][reduce [to-string x]]
     zs: map :uppercase xs
     --assert* [ys == zs]
 
 --test-- "string! -> string!"
-    xs: "abc"
-    ys: "ABC"
-    f: func [x][reduce [to-string x]]
-    zs: map :uppercase xs
+    xs: "123"
+    ys: [1 2 3]
+    f: func [x][do (to-string x)]
+    zs: map :f xs
     --assert* [ys == zs]    
+
 ===end-group===
 
 ===start-group=== "reverse"
@@ -918,16 +917,495 @@ Red [
 
 --test-- "(string! -> [string!]) -> [string!] -> [string!]"
     xs: ["1" "2" "3"]
-    ys: ["1" "2" "3"]
-    zs: concatMap func [x][reduce [x]] xs
+    ys: ["1" "1" "2" "2" "3" "3"]
+    zs: concatMap func [x][reduce [x x]] xs
     --assert* [ys == zs]
 
 --test-- "(character! -> string!) -> string! -> string!"
     xs: "abc"
     ys: "aabbcc"
-    zs: concatMap func [x][reduce [to-string x to-string x]] xs
+    zs: concatMap func [x][(to-string x) ++ (to-string x)] xs
+    --assert* [ys == zs]
+
+--test-- "(character! -> string!) -> string! -> string!"
+    xs: "abc"
+    ys: ["a" "a" "b" "b" "c" "c"]
+    zs: concatMap func [x][reduce [(to-string x) (to-string x)]] xs
+    --assert* [ys == zs]
+    
+===end-group===
+
+===start-group=== "sum"
+--test-- "[integer!] -> integer!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2 3 4]
+    ys1: 0
+    ys2: 1
+    ys3: 10
+    zs1: sum xs1
+    zs2: sum xs2
+    zs3: sum xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+===end-group===
+
+===start-group=== "product"
+
+--test-- "[integer!] -> integer!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2 3 4]
+    ys1: 1
+    ys2: 1
+    ys3: 24
+    zs1: product xs1
+    zs2: product xs2
+    zs3: product xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+===end-group===
+
+===start-group=== "maximum"
+
+--test-- "[integer!] -> integer!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2 3 4]
+    ys1: none
+    ys2: 1
+    ys3: 4
+    zs1: maximum xs1
+    zs2: maximum xs2
+    zs3: maximum xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+--test-- "[string!] -> integer!"
+    xs1: []
+    xs2: ["1"]
+    xs3: ["1" 2 3 4]
+    ys1: none
+    ys2: none
+    ys3: none
+    zs1: maximum xs1
+    zs2: maximum xs2
+    zs3: maximum xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+===end-group===
+
+===start-group=== "minimum"
+
+--test-- "[integer!] -> integer!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2 3 4]
+    ys1: none
+    ys2: 1
+    ys3: 1
+    zs1: minimum xs1
+    zs2: minimum xs2
+    zs3: minimum xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+--test-- "[string!] -> integer!"
+    xs1: []
+    xs2: ["1"]
+    xs3: ["1" 2 3 4]
+    ys1: none
+    ys2: none
+    ys3: none
+    zs1: minimum xs1
+    zs2: minimum xs2
+    zs3: minimum xs3
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+===end-group===
+
+===start-group=== "scanl"
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 1"
+    xs: [1 2 3]
+    ys: [0 1 3 6]
+    f: func [y x][x + y]
+    zs: scanl :f 0 xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 2"
+    xs: [1 2 3 4]
+    ys: [1 1 2 6 24]
+    f: func [y x][x * y]
+    zs: scanl :f 1 xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 3"
+    xs: [1 2 3 4]
+    ys: [[] [1] [1 2] [1 2 3] [1 2 3 4]]
+    f: func [y x][y ++ (reduce [x])]
+    zs: scanl :f [] xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> char! -> string!) -> string! -> [string!]"
+    xs: "abc"
+    ys: ["" "a" "ab" "abc"]
+    f: func [y x][y ++ (reduce [x])]
+    zs: scanl :f "" xs
     --assert* [ys == zs]
 
 ===end-group===
 
+===start-group=== "scanl1"
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 1"
+    xs: [1 2 3]
+    ys: [1 3 6]
+    f: func [y x][x + y]
+    zs: scanl1 :f xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 2"
+    xs: [1 2 3 4]
+    ys: [1 2 6 24]
+    f: func [y x][x * y]
+    zs: scanl1 :f xs
+    --assert* [ys == zs]
+===end-group===
+
+ ===start-group=== "scanr"
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 1"
+    xs: [1 2 3]
+    ys: [6 5 3 0]
+    f: func [x y][x + y]
+    zs: scanr :f 0 xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 2"
+    xs: [1 2 3 4]
+    ys: [24 24 12 4 1]
+    f: func [x y][x * y]
+    zs: scanr :f 1 xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 3"
+    xs: [1 2 3 4]
+    ys: [[4 3 2 1] [4 3 2] [4 3] [4] []]
+    f: func [x y][y ++ (reduce [x])]
+    zs: scanr :f [] xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> string! -> string!) -> string! -> [string!]"
+    xs: "abc"
+    ys: ["abc" "bc" "c" ""]
+    f: func [x y][(to-string x) ++ y]
+    zs: scanr :f "" xs
+    --assert* [ys == zs]
+
+ ===end-group===
+
+===start-group=== "scanr1"
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 1"
+    xs: [1 2 3]
+    ys: [6 5 3]
+    f: func [x y][x + y]
+    zs: scanr1 :f xs
+    --assert* [ys == zs]
+
+--test-- "(b -> a -> b) -> b -> [b] -> a 2"
+    xs: [1 2 3 4]
+    ys: [24 24 12 4]
+    f: func [x y][x * y]
+    zs: scanr1 :f xs
+    --assert* [ys == zs]
+===end-group===
+
+===start-group=== "replicate"
+
+--test-- "integer! -> integer! -> [any-type!]"
+    ys1: []
+    ys2: [1]
+    ys3: [1 1]
+    zs1: replicate 0 1
+    zs2: replicate 1 1
+    zs3: replicate 2 1
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+--test-- "integer! -> string! -> [string!]"
+    ys1: []
+    ys2: ["abc"]
+    ys3: ["abc" "abc"]
+    zs1: replicate 0 "abc"
+    zs2: replicate 1 "abc"
+    zs3: replicate 2 "abc"
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+--test-- "integer! -> char! -> string!"
+    ys1: ""
+    ys2: "a"
+    ys3: "aa"
+    zs1: replicate 0 #"a"
+    zs2: replicate 1 #"a"
+    zs3: replicate 2 #"a"
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+
+===end-group===
+
+===start-group=== "Take"
+
+--test-- "integer! -> integer! -> [any-type!]"
+    xs:  [1 2 3]
+    ys1: []
+    ys2: [1]
+    ys3: [1 2]
+    ys4: [1 2 3]
+    ys5: [1 2 3]
+    zs1: Take 0 xs
+    zs2: Take 1 xs
+    zs3: Take 2 xs
+    zs4: Take 3 xs
+    zs5: Take 4 xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "integer! -> string! -> [string!]"
+    xs:  "abc"
+    ys1: ""   
+    ys2: "a"  
+    ys3: "ab" 
+    ys4: "abc"
+    ys5: "abc"
+    zs1: Take 0 xs
+    zs2: Take 1 xs
+    zs3: Take 2 xs
+    zs4: Take 3 xs
+    zs5: Take 4 xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "drop"
+
+--test-- "integer! -> integer! -> [any-type!]"
+    xs:  [1 2 3]
+    ys1: [1 2 3]
+    ys2: [2 3]
+    ys3: [3]
+    ys4: []
+    ys5: []
+    zs1: drop 0 xs
+    zs2: drop 1 xs
+    zs3: drop 2 xs
+    zs4: drop 3 xs
+    zs5: drop 4 xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "integer! -> string! -> [string!]"
+    xs:  "abc"
+    ys1: ""   
+    ys2: "a"  
+    ys3: "ab" 
+    ys4: "abc"
+    ys5: "abc"
+    zs1: Take 0 xs
+    zs2: Take 1 xs
+    zs3: Take 2 xs
+    zs4: Take 3 xs
+    zs5: Take 4 xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "splitAt"
+
+--test-- "integer! -> integer! -> [any-type!]"
+    xs:  [1 2 3]
+    ys1: [[] [1 2 3]]
+    ys2: [[1] [2 3]]
+    ys3: [[1 2] [3]]
+    ys4: [[1 2 3] []]
+    ys5: [[1 2 3] []]
+    zs1: splitAt 0 xs
+    zs2: splitAt 1 xs
+    zs3: splitAt 2 xs
+    zs4: splitAt 3 xs
+    zs5: splitAt 4 xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "integer! -> string! -> [string!]"
+    xs:  "abc"
+    ys1: ["" "abc"]   
+    ys2: ["a" "bc"] 
+    ys3: ["ab" "c"]
+    ys4: ["abc" ""]
+    ys5: ["abc" ""]
+    zs1: splitAt 0 xs
+    zs2: splitAt 1 xs
+    zs3: splitAt 2 xs
+    zs4: splitAt 3 xs
+    zs5: splitAt 4 xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "takeWhile"
+
+--test-- "(integer! -> logic!) -> [any-type!]"
+    xs:  [1 2 3]
+    ys1: [1 2 3]
+    ys2: []
+    ys3: [1]
+    ys4: [1 2]
+    ys5: [1 2 3]
+    zs1: takeWhile :positive? xs
+    zs2: takeWhile func[x][x < 1] xs
+    zs3: takeWhile func[x][x < 2] xs
+    zs4: takeWhile func[x][x < 3] xs
+    zs5: takeWhile func[x][x < 4] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "integer! -> string! -> [string!]"
+    xs:  "abc"
+    ys1: ""   
+    ys2: "a"  
+    ys3: "ab" 
+    ys4: "abc"
+    ys5: "abc"
+    zs1: takeWhile func [x][x < #"a"] xs
+    zs2: takeWhile func [x][x < #"b"] xs
+    zs3: takeWhile func [x][x < #"c"] xs
+    zs4: takeWhile func [x][x < #"d"] xs
+    zs5: takeWhile func [x][x < #"e"] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "dropWhile"
+
+--test-- "(integer! -> logic!) -> [any-type!]"
+    xs:  [1 2 3]
+    ys1: []
+    ys2: [1 2 3]
+    ys3: [2 3]
+    ys4: [3]
+    ys5: []
+    zs1: dropWhile :positive? xs
+    zs2: dropWhile func[x][x < 1] xs
+    zs3: dropWhile func[x][x < 2] xs
+    zs4: dropWhile func[x][x < 3] xs
+    zs5: dropWhile func[x][x < 4] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "integer! -> string! -> [string!]"
+    xs:  "abc"
+    ys1: "abc"   
+    ys2: "bc"  
+    ys3: "c" 
+    ys4: ""
+    ys5: ""
+    zs1: dropWhile func [x][x < #"a"] xs
+    zs2: dropWhile func [x][x < #"b"] xs
+    zs3: dropWhile func [x][x < #"c"] xs
+    zs4: dropWhile func [x][x < #"d"] xs
+    zs5: dropWhile func [x][x < #"e"] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "dropWhileEnd"
+
+--test-- "(integer! -> logic!) -> [any-type!]"
+    xs:  [1 2 3]
+    ys1: []
+    ys2: [1 2 3]
+    ys3: [1 2 3]
+    ys4: [1 2 3]
+    ys5: []
+    zs1: dropWhileEnd :positive? xs
+    zs2: dropWhileEnd func[x][x < 1] xs
+    zs3: dropWhileEnd func[x][x < 2] xs
+    zs4: dropWhileEnd func[x][x < 3] xs
+    zs5: dropWhileEnd func[x][x < 4] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "integer! -> string! -> [string!]"
+    xs:  "abc"
+    ys1: "abc"   
+    ys2: "abc"  
+    ys3: "abc" 
+    ys4: ""
+    ys5: ""
+    zs1: dropWhileEnd func [x][x < #"a"] xs
+    zs2: dropWhileEnd func [x][x < #"b"] xs
+    zs3: dropWhileEnd func [x][x < #"c"] xs
+    zs4: dropWhileEnd func [x][x < #"d"] xs
+    zs5: dropWhileEnd func [x][x < #"e"] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
 ~~~end-file~~~

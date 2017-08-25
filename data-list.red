@@ -111,7 +111,11 @@ map: function [
     yss: copy []
     g: function [ys x] [append ys reduce [f x]]
     zss: foldl :g yss xs
-    either string? xs [rejoin zss][zss]
+    either all [(string? xs) all (map :char? zss)] [
+        foldl func[y x][y ++ (to-string x)] "" zss
+    ][
+        zss
+    ]
 ]
 
 ;--reverse is defined in Red, use reverse instead.
@@ -121,7 +125,7 @@ reverse: function [
 ][
     reverse* copy xs
 ]
-
+ 
 intersperse: function [
     "taking an element and a list and `intersperses' that element between the elements of the list."
     y
@@ -359,6 +363,11 @@ foldr: function [
         foreach x (reverse xs) [r: g x r]
         r
     ]
+
+
+
+
+
 ]
 
 ;"(a -> a -> a) -> [a] -> a"
@@ -374,10 +383,11 @@ concat: function [
     "The concatenation of all the elements of a container of lists."
     xs
 ][
-    either (all map :string? xs) [
-        string-concat xs
-    ][
-        block-concat xs
+    case [
+        ([] == xs) (copy [])
+        (all (map :string? xs)) (string-concat xs)
+        (all (map :block? xs)) (block-concat xs)
+        true none
     ]
 ]
 
@@ -400,7 +410,7 @@ concatMap: function [
     f
     xs
 ][
-    either (all map :string? xs) [
+    either (string? xs) [
         string-concatMap :f xs
     ][
         block-concatMap :f xs
@@ -411,7 +421,8 @@ string-concatMap: function [
     f
     xs
 ][
-    concat (map :f xs)
+    ys: (map :f xs)
+    either (string? ys) [ys][concat ys]
 ]
 
 block-concatMap: function [
@@ -419,6 +430,220 @@ block-concatMap: function [
     xs
 ][
     concat (map :f xs)
+]
+
+sum: function [
+    "computes the sum of the numbers of a structure."
+    xs
+][
+    case [
+        [] == (xs) 0
+        (all [block? xs (map :number? xs)]) (foldl1 func [y x][x + y] xs)
+        true none]
+]
+
+product: function [
+    "computes the product of the numbers of a structure."
+    xs
+][
+    case [
+        [] == (xs) 1
+        (all [block? xs (map :number? xs)]) (foldl1 func [y x][x * y] xs)
+        true none]
+]
+
+maximum: function [
+    "The largest element of a non-empty structure."
+    xs
+][
+    case [
+        [] == (xs) none
+        (all [(series? xs) (all (map :number? xs))]) (foldl1 func[y x][either y > x [y][x]] xs)
+        true none]
+]
+
+minimum: function [
+    "The largest element of a non-empty structure."
+    xs
+][
+    case [
+        [] == (xs) none
+        (all [(series? xs) (all (map :number? xs))]) (foldl1 func[y x][either y < x [y][x]] xs)
+        true none]
+]
+
+scanl: function [
+    "scanl is similar to foldl, but returns a list of successive reduced values from the left"
+    f
+    y
+    xs
+][
+    either series? xs [scanl* :f y xs][none]
+]
+
+scanl*: function [
+    "scanl is similar to foldl, but returns a list of successive reduced values from the left"
+    f
+    y
+    xs
+][
+    either empty? xs [reduce [y]][
+        ys: [y]
+        r: y
+        foreach x xs [
+            r: f r x
+            ys: ys ++ (either (char? r) [to-string r][reduce [r]])
+        ]
+        return ys 
+    ]
+]
+
+scanl1: function [
+    "a variant of scanl that has no starting value argument"
+    f
+    xs
+][
+    either (all [(series? xs) (0 < length? xs)]) [scanl* :f (first xs) (rest xs)][none]
+]
+
+scanr: function [
+    "scanr is similar to foldr, but returns a list of successive reduced values from the left"
+    f'
+    y
+    xs
+][
+    f: func [x' y'][f' y' x']
+    reverse (scanl :f y (reverse xs))
+]
+
+scanr1: function [
+    "a variant of scanr that has no starting value argument"
+    f'
+    xs
+][
+    f: func [y' x'][f' x' y']
+    either (all [(series? xs) (0 < (length? xs))]) [
+        reverse (scanl1 :f reverse xs)
+    ][
+        none
+    ]
+]
+
+replicate: function [
+"replicate n x is a list of length n with x the value of every element."
+    n
+    x
+][
+    xs: either (char? x) [""][copy []]
+    ys: either (char? x) [to-string x][reduce [x]]
+    i: 1
+    while [i <= n][
+        xs: xs ++ ys
+        i: i + 1
+    ]
+    xs 
+]
+
+Take: func [
+    "applied to a list xs, returns the prefix of xs of length n, or xs itself if n > length? xs"
+    n [integer!]
+    xs [series!]
+][
+    case [
+        (n > (length? xs)) xs
+        (n <= 0) (either (string? xs) [""][[]])
+        (n <= (length? xs)) (take* n xs)
+    ]
+]
+
+take*: func [
+    n [integer!]
+    xs [series!]
+][
+    ys: either (string? xs) [""][copy []]
+    i: 1
+    while [
+        i <= n
+    ][
+        ys: ys ++ (either (string? xs) [to-string (xs/:i)][reduce [xs/:i]])
+        i: i + 1]
+    ys
+]
+
+drop: func [
+    "returns the suffix of xs after the first n elements, or [] if n > length? xs"
+    n [integer!]
+    xs [series!]
+][
+    case [
+        (n <= 0) xs
+        (n >= (length? xs)) (either (string? xs) [""][[]])
+        true (drop* n xs)
+    ]
+]
+
+drop*: func [
+    n [integer!]
+    xs [series!]
+][
+    ys: either (string? xs) [""][copy []]
+    i: n + 1
+    while [
+        i <= (length? xs)
+    ][
+        ys: ys ++ (either (string? xs) [to-string (xs/:i)][reduce [xs/:i]])
+        i: i + 1]
+    ys
+]
+
+splitAt: func [
+    "returns a tuple where first element is xs prefix of length n and second element is the remainder of the list"
+    n [integer!]
+    xs [series!]
+][
+    reduce [(Take n xs) (drop n xs)]
+]
+
+takeWhile: func [
+    " applied to a predicate p and a list xs, returns the longest prefix (possibly empty) of xs of elements that satisfy p"
+    p [function! native!]
+    xs [series!]
+][
+    either (empty? xs) [xs][takeWhile* :p xs]
+]
+
+takeWhile*: func [
+    p [function! native!]
+    xs [series!]
+][
+    ys: either (string? xs) [""][copy []]
+    len: length? xs
+    i: 1
+    while [
+        all [(i <= len) (p (xs/:i))]
+    ][
+        x: xs/:i
+        ys: ys ++ (either (char? x) [to-string x][reduce [x]])
+        i: i + 1
+    ]
+    return ys
+]
+
+dropWhile: func [
+    "returns the suffix remaining after takeWhile p xs"
+    p [function! native!]
+    xs [series!]
+][
+    n: length? (takeWhile :p xs)
+    drop n xs
+]
+
+dropWhileEnd: func [
+    "returns the suffix remaining after takeWhile p xs"
+    p [function! native!]
+    xs [series!]
+][
+    reverse (dropWhile :p (reverse xs))
 ]
 
 filter: function [
