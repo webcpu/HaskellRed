@@ -757,7 +757,6 @@ Red [
     xs2: [["d"] ["e"] ["f"]]
     yss: [[["a"] ["d"]] [["b"] ["e"]] [["c"] ["f"]]]
     zss: zip xs1 xs2
-    zip "hello" 1
     --assert* [yss == zss]
 ===end-group===
 
@@ -1379,10 +1378,10 @@ Red [
     ys4: [1 2 3]
     ys5: []
     zs1: dropWhileEnd :positive? xs
-    zs2: dropWhileEnd func[x][x < 1] xs
-    zs3: dropWhileEnd func[x][x < 2] xs
-    zs4: dropWhileEnd func[x][x < 3] xs
-    zs5: dropWhileEnd func[x][x < 4] xs
+    zs2: dropWhileEnd func [x][x < 1] xs
+    zs3: dropWhileEnd func [x][x < 2] xs
+    zs4: dropWhileEnd func [x][x < 3] xs
+    zs5: dropWhileEnd func [x][x < 4] xs
     --assert* [ys1 == zs1]
     --assert* [ys2 == zs2]
     --assert* [ys3 == zs3]
@@ -1408,4 +1407,217 @@ Red [
     --assert* [ys5 == zs5]
 
 ===end-group===
+
+===start-group=== "span"
+
+--test-- "(integer! -> logic!) -> [[integer!]"
+    xs:  [1 2 3]
+    ys1: [[1 2 3] []]
+    ys2: [[] [1 2 3]]
+    ys3: [[1] [2 3]]
+    ys4: [[1 2] [3]]
+    ys5: [[1 2 3] []]
+    zs1: span :positive? xs
+    zs2: span func [x][x < 1] xs
+    zs3: span func [x][x < 2] xs
+    zs4: span func [x][x < 3] xs
+    zs5: span func [x][x < 4] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "string! -> string! -> [[string!]]"
+    xs:  "abc"
+    ys1: ["" "abc"]
+    ys2: ["a" "bc"]
+    ys3: ["ab" "c"]
+    ys4: ["abc" ""]
+    ys5: ["abc" ""]
+    zs1: span func [x][x < #"a"] xs
+    zs2: span func [x][x < #"b"] xs
+    zs3: span func [x][x < #"c"] xs
+    zs4: span func [x][x < #"d"] xs
+    zs5: span func [x][x < #"e"] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "break'"
+
+--test-- "(integer! -> logic!) -> [integer!] -> [[integer!]"
+    xs:  [1 2 3]
+    ys1: [[] [1 2 3]]
+    ys2: [[1] [2 3]]
+    ys3: [[1 2] [3]]
+    ys4: [[1 2 3] []]
+    ys5: [[1 2 3] []]
+    ; zs1: break' :positive? xs
+    ; zs2: break' func [x][x > 1] xs
+    ; zs3: break' func [x][x > 2] xs
+    ; zs4: break' func [x][x > 3] xs
+    ; zs5: break' func [x][x > 4] xs
+    ; --assert* [ys1 == zs1]
+    ; --assert* [ys2 == zs2]
+    ; --assert* [ys3 == zs3]
+    ; --assert* [ys4 == zs4]
+    ; --assert* [ys5 == zs5]
+
+--test-- "(char! -> logic!) -> string! -> [[string!]]"
+    xs:  "abc"
+    ys1: ["" "abc"]
+    ys2: ["a" "bc"]
+    ys3: ["ab" "c"]
+    ys4: ["abc" ""]
+;    ys5: ["abc" ""]
+    ; zs1: break' func [x][x >= #"a"] xs
+    ; zs2: break' func [x][x >= #"b"] xs
+    ; zs3: break' func [x][x >= #"c"] xs
+    ; zs4: break' func [x][x >= #"d"] xs
+    ; zs5: break' func [x][x >= #"e"] xs
+    ; --assert* [ys1 == zs1]
+    ; --assert* [ys2 == zs2]
+    ; --assert* [ys3 == zs3]
+    ; --assert* [ys4 == zs4]
+    ; --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "stripPrefix"
+
+--test-- "[integer!] -> [integer!] -> [integer!]"
+    xs:  [1 2 3]
+    ys1: [1 2 3]
+    ys2: [2 3]
+    ys3: [3]
+    ys4: []
+    ys5: Nothing
+    zs1: stripPrefix [] xs
+    zs2: stripPrefix [1] xs
+    zs3: stripPrefix [1 2] xs
+    zs4: stripPrefix [1 2 3] xs
+    zs5: stripPrefix [1 2 3 4] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "string! -> string! -> [[string!]]"
+    xs:  "abc"
+    ys1: "abc"
+    ys2: "bc"
+    ys3: "c"
+    ys4: ""
+    ys5: Nothing
+    zs1: stripPrefix "" xs
+    zs2: stripPrefix "a" xs
+    zs3: stripPrefix "ab" xs
+    zs4: stripPrefix "abc" xs
+    zs5: stripPrefix "abcd" xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "group"
+
+--test-- "[integer!] -> [[integer!]"
+     xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3 3 2]
+    xs5: [1 1 2 1]
+    ys1: []
+    ys2: [[1]]
+    ys3: [[1] [2]]
+    ys4: [[1] [2] [3 3] [2]]
+    ys5: [[1 1] [2] [1]]
+     zs1: group xs1
+    zs2: group xs2
+    zs3: group xs3
+    zs4: group xs4
+    zs5: group xs5
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+--test-- "string! -> [string!]"
+    xs1: ""
+    xs2: "abc"
+    xs3: "abba"
+    xs4: "abcdd"
+    xs5: "aabcdd"
+    ys1: []
+    ys2: ["a" "b" "c"]
+    ys3: ["a" "bb" "a"]
+    ys4: ["a" "b" "c" "dd"]
+    ys5: ["aa" "b" "c" "dd"]
+    zs1: group xs1
+    zs2: group xs2
+    zs3: group xs3
+    zs4: group xs4
+    zs5: group xs5
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+===start-group=== "sortBy"
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
+    xs:  [1 2 3]
+    ys1: [1 2 3]
+    ys2: [3 2 1]
+    zs1: sortBy (func [x y][x < y]) (copy xs)
+    zs2: sortBy (func [x y][x > y]) (copy xs)
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+--test-- "(char! -> char! -> logic!) -> string! -> string!"
+    xs:  "abc"
+    ys1: "abc"
+    ys2: "cba"
+    zs1: sortBy func [x y][x < y] xs
+    zs2: sortBy func [x y][x > y] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+===end-group===
+
+===start-group=== "insertBy"
+
+--test-- "(integer! -> integer -> logic!) -> [integer!] -> [integer!]"
+    xs:  [1 2 3]
+    ys1: [1 2 3]
+    ys2: [3 2 1]
+    zs1: sortBy (func [x y][x < y]) (copy xs)
+    zs2: sortBy (func [x y][x > y]) (copy xs)
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+--test-- "string! -> string! -> [[string!]]"
+    xs:  "abc"
+    ys1: "abc"
+    ys2: "cba"
+    zs1: sortBy func [x y][x < y] xs
+    zs2: sortBy func [x y][x > y] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+===end-group===
+
 ~~~end-file~~~

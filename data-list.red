@@ -8,15 +8,15 @@ Red [
 ]
 
 add*: :add
-add-matrix: func[xs ys][manipulate-matrix :add* xs ys]
+add-matrix: func [xs ys][manipulate-matrix :add* xs ys]
 +: make op! :add-matrix
 
 subtract*: :subtract
-subtract-matrix: func[xs ys][manipulate-matrix :subtract* xs ys]
+subtract-matrix: func [xs ys][manipulate-matrix :subtract* xs ys]
 -: make op! :subtract-matrix
 
 multiply*: :multiply
-multiply-matrix: func[xs ys][manipulate-matrix :multiply* xs ys]
+multiply-matrix: func [xs ys][manipulate-matrix :multiply* xs ys]
 *: make op! :multiply-matrix
 
 divide*: :divide
@@ -32,7 +32,7 @@ manipulate-matrix: function [
     xs': reduce xs
     ys': reduce ys
     case [
-        equal-blocks? xs' ys' (map :arithmetic-func zip xs' ys')
+        equal-blocks? xs' ys' (map :arithmetic-func (zip xs' ys'))
         inequal-blocks? xs' ys' (do [print (unequal-error-message xs' ys') none])
         true f xs ys
     ]
@@ -68,13 +68,14 @@ plus-block: function [
 ;--tail is defined in Red, use rest instead.
 rest: function [
     "Extract the elements after the head of a list, which must be non-empty."
-    xs [block! string!]][
+    xs [series!]
+][
     copy next xs
 ]
 
 init: function [
     "Return all the elements of a list except the last one. The list must be non-empty."
-    xs [block! string!]
+    xs [series!]
 ][
     either 1 == length? xs [
         either string? xs [copy ""][copy []]
@@ -86,7 +87,7 @@ most: :init
 
 uncons: function [
     "Decompose a list into its first and rest. If the list is empty, returns Nothing. If the list is non-empty, returns Just (x, xs), where x is the head of the list and xs its tail."
-    xs [block! string!]
+    xs [series!]
 ][
     either 0 == length? xs [
         Nothing
@@ -99,14 +100,15 @@ Nothing: none
 
 length: function [
     "Returns the size/length of a finite structure as an Int. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better."
-    xs [block! string!]][
+    xs [series!]
+][
     length? xs
 ]
 
 map: function [
     "applying f to each element of xs"
-    f
-    xs
+    f [function! native!]
+    xs [series!]
 ][
     yss: copy []
     g: function [ys x] [append ys reduce [f x]]
@@ -121,15 +123,15 @@ map: function [
 ;--reverse is defined in Red, use reverse instead.
 reverse*: :reverse
 reverse: function [
-    xs
+    xs [series!]
 ][
     reverse* copy xs
 ]
- 
+
 intersperse: function [
     "taking an element and a list and `intersperses' that element between the elements of the list."
     y
-    xs
+    xs [series!]
 ][
     either 1 >= length? xs [
         xs
@@ -141,7 +143,7 @@ intersperse: function [
 
 transpose: function [
     "transposing the rows and columns of its argument."
-    xss
+    xss [series!]
 ][
     case [
         (not transposable? xss) none
@@ -152,7 +154,7 @@ transpose: function [
 ]
 
 transposable?: function [
-    xss
+    xss [series!]
 ][
     case [
         (xss == []) true
@@ -164,7 +166,7 @@ transposable?: function [
 ]
 
 transposable?*: function [
-    xss
+    xss [series!]
 ][
     general-length?: func [x][either (series? x) [length? x][none]]
     length-equal?: func [x][(general-length? x) == (general-length? first :xss)] 
@@ -178,7 +180,7 @@ transposable?*: function [
 
 subsequences: function [
     "returns the list of all subsequences of the argument"
-    xs
+    xs [series!]
 ][
     case [
         (not series? xs) none
@@ -221,7 +223,7 @@ non-empty-block-subsequences*: function [
 ]
 
 string-subsequences: function [
-    xs
+    xs [string!]
 ][
     either (empty? xs) [
         copy [""]
@@ -231,13 +233,13 @@ string-subsequences: function [
 ]
 
 non-empty-string-subsequences: function [
-    xs
+    xs [string!]
 ][
     either empty? xs [copy []][non-empty-string-subsequences* xs]
 ]
 
 non-empty-string-subsequences*: function [
-    xs
+    xs [string!]
 ][
     g: function [ys r][
         m1: reduce [ys] 
@@ -254,7 +256,7 @@ non-empty-string-subsequences*: function [
 
 permutations: function [
     "returns the list of all permutations of the argument." 
-    xs
+    xs [series!]
 ][
     case [
         (not series? xs) none
@@ -265,7 +267,7 @@ permutations: function [
 ]
 
 block-permutations: function [
-    xs
+    xs [series!]
 ][
     either empty? xs [
         copy [[]] ; Don't use []
@@ -279,14 +281,14 @@ block-permutations: function [
 
 block-between: function [
     x
-    ys
+    ys [series!]
 ][
     either (empty? ys) [reduce [reduce [x]]][block-between* x ys]
 ]
 
 block-between*: function [
     x
-    ys
+    ys [series!]
 ][
     m1: (reduce [(reduce [x]) ++ ys])
 
@@ -297,12 +299,12 @@ block-between*: function [
 ]
 
 string-permutations: function [
-    xs
+    xs [string!]
 ][
     either empty? xs [
         copy [""] ; Don't use []
     ][
-        ys: block-permutations (rest xs)
+        ys: string-permutations (rest xs)
         f: func [zs][string-between (first xs) zs]
         g: func [zs x][zs ++ x]
         foldl :g [] (map :f ys)
@@ -310,15 +312,15 @@ string-permutations: function [
 ]
 
 string-between: function [
-    x
-    ys
+    x [char!]
+    ys [string!]
 ][
     either (empty? ys) [reduce [to-string x]][string-between* x ys]
 ]
 
 string-between*: function [
-    x
-    ys
+    x [char!]
+    ys [string!]
 ][
     m1: (reduce [(to-string x) ++ ys])
 
@@ -330,9 +332,9 @@ string-between*: function [
 
 foldl: function [
     "reduces the list using the binary operator, from left to right"
-    f
+    f [function! native!]
     y
-    xs
+    xs [series!]
 ][
     either empty? xs [y][
         r: y
@@ -344,17 +346,17 @@ foldl: function [
 "(a -> a -> a) -> [a] -> a"
 foldl1: function [
     "A variant of foldl that has no base case, and thus may only be applied to non-empty structures."
-    f
-    xs
+    f [function! native!]
+    xs [series!]
 ][
     either empty? xs [none][foldl :f (first xs) (rest xs)]
 ]
 
 foldr: function [
     "reduces the list using the binary operator, from right to left"
-    g
+    g [function! native!]
     y
-    xs
+    xs [series!]
 ][
     either empty? xs [
         y
@@ -363,25 +365,20 @@ foldr: function [
         foreach x (reverse xs) [r: g x r]
         r
     ]
-
-
-
-
-
 ]
 
 ;"(a -> a -> a) -> [a] -> a"
 foldr1: function [
     "A variant of foldr that has no base case, and thus may only be applied to non-empty structures."
-    f
-    xs
+    f [function! native!]
+    xs [series!]
 ][
     either empty? xs [none][foldr :f (last xs) (most xs)]
 ]
 
 concat: function [
     "The concatenation of all the elements of a container of lists."
-    xs
+    xs [series!]
 ][
     case [
         ([] == xs) (copy [])
@@ -392,7 +389,7 @@ concat: function [
 ]
 
 block-concat: function [
-    xs
+    xs [series!]
 ][
     f: func [y x][y ++ x]
     foldl :f [] xs
@@ -407,8 +404,8 @@ string-concat: function [
 
 concatMap: function [
     "Map a function over all the elements of a container and concatenate the resulting lists."
-    f
-    xs
+    f [function! native!]
+    xs [series!]
 ][
     either (string? xs) [
         string-concatMap :f xs
@@ -418,23 +415,23 @@ concatMap: function [
 ]
 
 string-concatMap: function [
-    f
-    xs
+    f [function! native!]
+    xs [string!]
 ][
     ys: (map :f xs)
     either (string? ys) [ys][concat ys]
 ]
 
 block-concatMap: function [
-    f
-    xs
+    f [function! native!]
+    xs [series!]
 ][
     concat (map :f xs)
 ]
 
 sum: function [
     "computes the sum of the numbers of a structure."
-    xs
+    xs [series!]
 ][
     case [
         [] == (xs) 0
@@ -444,7 +441,7 @@ sum: function [
 
 product: function [
     "computes the product of the numbers of a structure."
-    xs
+    xs [series!]
 ][
     case [
         [] == (xs) 1
@@ -454,7 +451,7 @@ product: function [
 
 maximum: function [
     "The largest element of a non-empty structure."
-    xs
+    xs [series!]
 ][
     case [
         [] == (xs) none
@@ -464,7 +461,7 @@ maximum: function [
 
 minimum: function [
     "The largest element of a non-empty structure."
-    xs
+    xs [series!]
 ][
     case [
         [] == (xs) none
@@ -474,18 +471,18 @@ minimum: function [
 
 scanl: function [
     "scanl is similar to foldl, but returns a list of successive reduced values from the left"
-    f
+    f [function! native!]
     y
-    xs
+    xs [series!]
 ][
     either series? xs [scanl* :f y xs][none]
 ]
 
 scanl*: function [
     "scanl is similar to foldl, but returns a list of successive reduced values from the left"
-    f
+    f [function! native!]
     y
-    xs
+    xs [series!]
 ][
     either empty? xs [reduce [y]][
         ys: [y]
@@ -500,17 +497,17 @@ scanl*: function [
 
 scanl1: function [
     "a variant of scanl that has no starting value argument"
-    f
-    xs
+    f [function! native!]
+    xs [series!]
 ][
     either (all [(series? xs) (0 < length? xs)]) [scanl* :f (first xs) (rest xs)][none]
 ]
 
 scanr: function [
     "scanr is similar to foldr, but returns a list of successive reduced values from the left"
-    f'
+    f' [function! native!]
     y
-    xs
+    xs [series!]
 ][
     f: func [x' y'][f' y' x']
     reverse (scanl :f y (reverse xs))
@@ -518,8 +515,8 @@ scanr: function [
 
 scanr1: function [
     "a variant of scanr that has no starting value argument"
-    f'
-    xs
+    f' [function! native!]
+    xs [series!]
 ][
     f: func [y' x'][f' x' y']
     either (all [(series? xs) (0 < (length? xs))]) [
@@ -530,8 +527,8 @@ scanr1: function [
 ]
 
 replicate: function [
-"replicate n x is a list of length n with x the value of every element."
-    n
+    "replicate n x is a list of length n with x the value of every element."
+    n [integer!]
     x
 ][
     xs: either (char? x) [""][copy []]
@@ -556,7 +553,7 @@ Take: func [
     ]
 ]
 
-take*: func [
+take*: function [
     n [integer!]
     xs [series!]
 ][
@@ -570,7 +567,7 @@ take*: func [
     ys
 ]
 
-drop: func [
+drop: function [
     "returns the suffix of xs after the first n elements, or [] if n > length? xs"
     n [integer!]
     xs [series!]
@@ -582,7 +579,7 @@ drop: func [
     ]
 ]
 
-drop*: func [
+drop*: function [
     n [integer!]
     xs [series!]
 ][
@@ -596,7 +593,7 @@ drop*: func [
     ys
 ]
 
-splitAt: func [
+splitAt: function [
     "returns a tuple where first element is xs prefix of length n and second element is the remainder of the list"
     n [integer!]
     xs [series!]
@@ -604,7 +601,7 @@ splitAt: func [
     reduce [(Take n xs) (drop n xs)]
 ]
 
-takeWhile: func [
+takeWhile: function [
     " applied to a predicate p and a list xs, returns the longest prefix (possibly empty) of xs of elements that satisfy p"
     p [function! native!]
     xs [series!]
@@ -612,7 +609,7 @@ takeWhile: func [
     either (empty? xs) [xs][takeWhile* :p xs]
 ]
 
-takeWhile*: func [
+takeWhile*: function [
     p [function! native!]
     xs [series!]
 ][
@@ -629,7 +626,7 @@ takeWhile*: func [
     return ys
 ]
 
-dropWhile: func [
+dropWhile: function [
     "returns the suffix remaining after takeWhile p xs"
     p [function! native!]
     xs [series!]
@@ -638,7 +635,7 @@ dropWhile: func [
     drop n xs
 ]
 
-dropWhileEnd: func [
+dropWhileEnd: function [
     "returns the suffix remaining after takeWhile p xs"
     p [function! native!]
     xs [series!]
@@ -646,10 +643,97 @@ dropWhileEnd: func [
     reverse (dropWhile :p (reverse xs))
 ]
 
+span: function [
+    " applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that satisfy p and second element is the remainder of the list"
+    p [function! native!]
+    xs [series!]
+][
+    reduce [(takeWhile :p xs) (dropWhile :p xs)]
+]
+
+Break: function [
+    "applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that do not satisfy p and second element is the remainder of the list"
+    p [function! native!]
+    xs [series!]
+][
+    span func [x][not p x] xs
+]
+
+stripPrefix: function [
+    "drops the given prefix from a list. It returns Nothing if the list did not start with the prefix given, or Just the list after the prefix, if it does."
+    xs [series!]
+    ys [series!]
+][
+    either empty? xs [ys][stripPrefix* xs ys]
+]
+
+stripPrefix*: function [
+    xs [series!]
+    ys [series!]
+][
+    n: length? xs
+    either xs == (take n ys) [drop n ys][Nothing]
+]
+
+group: function [
+    "takes a list and returns a list of lists such that the concatenation of the result is equal to the argument. Moreover, each sublist in the result contains only equal elements."
+    xs [series!]
+][
+    groupBy func [y x][y == x] xs
+]
+
+groupBy: function [
+    "the non-overloaded version of group."
+    f [function! native!]
+    xs [series!]
+][
+    case [
+        (empty? xs) (copy [])
+        (1 == (length? xs)) (reduce [xs])
+        true (groupBy* :f xs)
+    ]
+]
+
+groupBy*: function [
+    f [function! native!]
+    xs' [series!]
+][
+    zss: copy []
+    xs: copy xs'
+    while [0 < (length? xs)][
+        y: first xs
+        ys: takeWhile (func [x][f :y x]) (rest xs)
+        xs: drop (length? (copy ys)) (rest xs)
+        ys': either (char? y) [to-string y][reduce [y]]
+        yss: reduce [ys' ++ ys]
+        zss: either (empty? ys) [zss ++ (reduce [ys'])][zss ++ yss]
+    ]
+    return zss
+]
+
+sortBy: function [
+    "the non-overloaded version of sort."
+    f [any-function!]
+    xs [series!]
+][
+    either string? xs [
+        string-sortBy :f xs
+    ][
+        sort/compare (copy xs) :f
+    ]
+]
+
+string-sortBy: function [
+    f [any-function!]
+    xs [series!]
+][
+    concat (sort/compare (map :to-string xs) :f)
+]
+
 filter: function [
     "applying a predicate f to xs"
-    f
-    xs
+    f [function! native!]
+    xs [series!]
 ][
     yss: copy []
     g: func [ys x][either f x [append ys reduce [x]][ys]]
@@ -659,18 +743,14 @@ filter: function [
 
 zip: function [
     "takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the longer list are discarded."
-    xs
-    ys
-][
-    valid-parameters?: func [xs ys][all [(block? xs) or (string? ys) (block? xs) or (string? ys)]] 
-    either valid-parameters? xs ys [zip* xs ys][return none]
-]
-
-zip*: function [
-    xs
-    ys
+    xs [series!]
+    ys [series!]
 ][
     zss: copy []
     len: min (length? xs) (length? ys)
-    repeat i :len [append zss reduce [reduce [xs/:i ys/:i]]]
+    repeat i :len [
+        xy: reduce [xs/:i ys/:i]
+        zss: zss ++ (reduce [xy])
+    ]
+    return zss
 ]
