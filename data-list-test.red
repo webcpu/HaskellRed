@@ -2290,7 +2290,7 @@ Red [
     z:  findIndices func [x][x == #"b"] xs
     --assert* [y == z]
 
---test-- "(char! -> logic!) -> string! -> [integer!] 4"
+--test-- "(char! -> string! -> [integer!] 4"
     xs: "abcba"
     y:  [2]
     z:  findIndices func [x][x == #"c"] xs
@@ -2885,6 +2885,87 @@ Red [
     yss: [[["a"] ["d"] ["g"] ["i"] ["k"] ["m"] ["o"]] [["b"] ["e"] ["h"] ["j"] ["l"] ["n"] ["p"]]]
     zss: zip7 xs1 xs2 xs3 xs4 xs5 xs6 xs7
     --assert* [yss == zss]
+===end-group===
+
+===start-group=== "zipWith"
+
+--test-- "(integer! -> integer -> [integer!]) -> [integer!] -> [integer!] -> [[integer!]]"
+    xs1: [1 2 3]
+    xs2: [4 5 6]
+    yss: [[1 4] [2 5] [3 6]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "[(integer! -> char! -> [integer! | char!]) -> integer!] -> string! -> [[integer! | char!]]"
+    xs1: [1 2 3]
+    xs2: "abc"
+    yss: [[1 #"a"] [2 #"b"] [3 #"c"]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(string! -> string! -> [string!]) -> [string!] -> [string!] -> [[string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: ["b" "de" "ghi"]
+    yss: [["a" "b"] ["bc" "de"] ["def" "ghi"]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(string! -> integer! -> [string | integer!]) -> [string!] -> [integer!] -> [[string! | integer!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: [1 2 3]
+    yss: [["a" 1] ["bc" 2] ["def" 3]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> [char!]) -> string! -> string! -> [[char!]] 1"
+    xs1: "abc"
+    xs2: "123"
+    yss: [[#"a" #"1"] [#"b" #"2"] [#"c" #"3"]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> [char!]) -> string! -> string! -> [[char!]] 2"
+    xs1: "abcb"
+    xs2: "123"
+    yss: [[#"a" #"1"] [#"b" #"2"] [#"c" #"3"]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char!) -> string! -> string! -> string"
+    xs1: "abcd"
+    xs2: "123"
+    yss: "abc"
+    zss: zipWith func [x y][x] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[[integer!]]]"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6]]
+    yss: [[[1] [4]] [[2] [5]] [[3] [6]]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6] [7]]
+    yss: [[[1] [4]] [[2] [5]] [[3] [6]]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer -> [integer!]) -> [[string!]] -> [[string!]] -> [[[string!]]] 1"
+    xs1: [["a"] ["b"] ["c"]]
+    xs2: [["d"] ["e"] ["f"]]
+    yss: [[["a"] ["d"]] [["b"] ["e"]] [["c"] ["f"]]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer -> [integer!]) -> [[string!]] -> [[string!]] -> [[[string!]]] 2"
+    xs1: [["a"] ["b"] ["c"] "e"]
+    xs2: [["d"] ["e"] ["f"]]
+    yss: [[["a"] ["d"]] [["b"] ["e"]] [["c"] ["f"]]]
+    zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
 ===end-group===
 
 ===start-group=== "sortBy"

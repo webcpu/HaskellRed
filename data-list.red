@@ -984,6 +984,21 @@ zip7: function [
     return zss
 ]
 
+zipWith: function [
+    "generalises zip by zipping with the function given as the first argument, instead of a tupling function."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+][
+    rs: copy []
+    len: minimum (reduce (map :length? reduce [xs ys]))
+    repeat i :len [
+        r: f xs/:i ys/:i
+        rs: rs ++ (reduce [r])
+    ]
+    return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
+]
+
 groupBy: function [
     "the non-overloaded version of group."
     f [any-function!]
