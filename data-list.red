@@ -107,7 +107,7 @@ length: function [
 
 map: function [
     "applying f to each element of xs"
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     yss: copy []
@@ -332,7 +332,7 @@ string-between*: function [
 
 foldl: function [
     "reduces the list using the binary operator, from left to right"
-    f [function! native!]
+    f [any-function!]
     y
     xs [series!]
 ][
@@ -346,7 +346,7 @@ foldl: function [
 "(a -> a -> a) -> [a] -> a"
 foldl1: function [
     "A variant of foldl that has no base case, and thus may only be applied to non-empty structures."
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     either empty? xs [none][foldl :f (first xs) (rest xs)]
@@ -354,7 +354,7 @@ foldl1: function [
 
 foldr: function [
     "reduces the list using the binary operator, from right to left"
-    g [function! native!]
+    g [any-function!]
     y
     xs [series!]
 ][
@@ -370,7 +370,7 @@ foldr: function [
 ;"(a -> a -> a) -> [a] -> a"
 foldr1: function [
     "A variant of foldr that has no base case, and thus may only be applied to non-empty structures."
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     either empty? xs [none][foldr :f (last xs) (most xs)]
@@ -404,7 +404,7 @@ string-concat: function [
 
 concatMap: function [
     "Map a function over all the elements of a container and concatenate the resulting lists."
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     either (string? xs) [
@@ -415,7 +415,7 @@ concatMap: function [
 ]
 
 string-concatMap: function [
-    f [function! native!]
+    f [any-function!]
     xs [string!]
 ][
     ys: (map :f xs)
@@ -423,7 +423,7 @@ string-concatMap: function [
 ]
 
 block-concatMap: function [
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     concat (map :f xs)
@@ -471,7 +471,7 @@ minimum: function [
 
 scanl: function [
     "scanl is similar to foldl, but returns a list of successive reduced values from the left"
-    f [function! native!]
+    f [any-function!]
     y
     xs [series!]
 ][
@@ -480,7 +480,7 @@ scanl: function [
 
 scanl*: function [
     "scanl is similar to foldl, but returns a list of successive reduced values from the left"
-    f [function! native!]
+    f [any-function!]
     y
     xs [series!]
 ][
@@ -497,7 +497,7 @@ scanl*: function [
 
 scanl1: function [
     "a variant of scanl that has no starting value argument"
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     either (all [(series? xs) (0 < length? xs)]) [scanl* :f (first xs) (rest xs)][none]
@@ -505,7 +505,7 @@ scanl1: function [
 
 scanr: function [
     "scanr is similar to foldr, but returns a list of successive reduced values from the left"
-    f' [function! native!]
+    f' [any-function!]
     y
     xs [series!]
 ][
@@ -515,7 +515,7 @@ scanr: function [
 
 scanr1: function [
     "a variant of scanr that has no starting value argument"
-    f' [function! native!]
+    f' [any-function!]
     xs [series!]
 ][
     f: func [y' x'][f' x' y']
@@ -603,14 +603,14 @@ splitAt: function [
 
 takeWhile: function [
     " applied to a predicate p and a list xs, returns the longest prefix (possibly empty) of xs of elements that satisfy p"
-    p [function! native!]
+    p [any-function!]
     xs [series!]
 ][
     either (empty? xs) [xs][takeWhile* :p xs]
 ]
 
 takeWhile*: function [
-    p [function! native!]
+    p [any-function!]
     xs [series!]
 ][
     ys: either (string? xs) [""][copy []]
@@ -628,7 +628,7 @@ takeWhile*: function [
 
 dropWhile: function [
     "returns the suffix remaining after takeWhile p xs"
-    p [function! native!]
+    p [any-function!]
     xs [series!]
 ][
     n: length? (takeWhile :p xs)
@@ -637,7 +637,7 @@ dropWhile: function [
 
 dropWhileEnd: function [
     "returns the suffix remaining after takeWhile p xs"
-    p [function! native!]
+    p [any-function!]
     xs [series!]
 ][
     reverse (dropWhile :p (reverse xs))
@@ -645,7 +645,7 @@ dropWhileEnd: function [
 
 span: function [
     " applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that satisfy p and second element is the remainder of the list"
-    p [function! native!]
+    p [any-function!]
     xs [series!]
 ][
     reduce [(takeWhile :p xs) (dropWhile :p xs)]
@@ -653,7 +653,7 @@ span: function [
 
 break': function [
     "applied to a predicate p and a list xs, returns a tuple where first element is longest prefix (possibly empty) of xs of elements that do not satisfy p and second element is the remainder of the list"
-    p [function! native!]
+    p [any-function!]
     xs [series!]
 ][
     span func [x][not p x] xs
@@ -800,7 +800,7 @@ find'*: function [
 
 filter: function [
     "applying a predicate f to xs"
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     yss: either string? xs [copy ""][copy []]
@@ -816,16 +816,161 @@ partition: function [
     reduce [(filter :f xs) (filter func[x][not f x] xs)]
 ]
 
-partition*: function [
-    f   [any-function!] 
-    xs' [series!]
+;;Indexing lists
+list-index*: function [
+    "List index (subscript) operator, starting from 0."
+    xs [series!]
+    i [integer!]
 ][
+   xs/(i + 1) 
+]
+!!: make op! :list-index*
 
+elemIndex: function [
+    "returns the index of the first element in the given list which is equal (by ==) to the query element, or Nothing if there is no such element."
+    x
+    xs [series!]
+][
+    ys: find/case xs x
+    either (ys == none) [none][offset? xs ys]
+]
+
+elemIndices: function [
+    "returning the indices of all elements equal to the query element, in ascending order."
+    x
+    xs [series!]
+][
+    ys: copy []
+    len: length? xs
+    i: 1
+    while [i <= len][
+        ys: either (x == xs/:i)[ys ++ (reduce [(i - 1)])][ys]
+        i: i + 1
+    ]
+    return ys
+]
+
+findIndex: function [
+    "takes a predicate and a list and returns the index of the first element in the list satisfying the predicate, or Nothing if there is no such element."
+    f [any-function!]
+    xs [series!]
+][
+    len: length? xs
+    i: 1
+    r: none
+    while [i <= len][
+        either (f xs/:i) == true [
+            (r: (i - 1)) break
+        ][
+            i: i + 1
+        ]
+    ]
+    return r
+]
+
+;;Zipping and unzipping lists
+zip: function [
+    "takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the longer list are discarded."
+    xs [series!]
+    ys [series!]
+][
+    zss: copy []
+    len: min (length? xs) (length? ys)
+    repeat i :len [
+        xy: reduce [xs/:i ys/:i]
+        zss: zss ++ (reduce [xy])
+    ]
+    return zss
+]
+
+zip3: function [
+    "takes three lists and returns a list of triples, analogous to zip."
+    xs [series!]
+    ys [series!]
+    zs [series!]
+][
+    zss: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs]))
+    repeat i :len [
+        xyz: reduce [xs/:i ys/:i zs/:i]
+        zss: zss ++ (reduce [xyz])
+    ]
+    return zss
+]
+
+zip4: function [
+    "takes four lists and returns a list of quadruples, analogous to zip."
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+][
+    zss: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us]))
+    repeat i :len [
+        xyzu: reduce [xs/:i ys/:i zs/:i us/:i]
+        zss: zss ++ (reduce [xyzu])
+    ]
+    return zss
+]
+
+zip5: function [
+    "takes four lists and returns a list of five-tuples, analogous to zip."
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+    vs [series!]
+][
+    zss: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us vs]))
+    repeat i :len [
+        xyzuv: reduce [xs/:i ys/:i zs/:i us/:i vs/:i]
+        zss: zss ++ (reduce [xyzuv])
+    ]
+    return zss
+]
+
+zip6: function [
+    "takes four lists and returns a list of six-tuples, analogous to zip."
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+    vs [series!]
+    ws [series!]
+][
+    zss: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us vs ws]))
+    repeat i :len [
+        xyzuvw: reduce [xs/:i ys/:i zs/:i us/:i vs/:i ws/:i]
+        zss: zss ++ (reduce [xyzuvw])
+    ]
+    return zss
+]
+
+zip7: function [
+    "takes four lists and returns a list of seven-tuples, analogous to zip."
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+    vs [series!]
+    ws [series!]
+    ts [series!]
+][
+    zss: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us vs ws ts]))
+    repeat i :len [
+        xyzuvwt: reduce [xs/:i ys/:i zs/:i us/:i vs/:i ws/:i ts/:i]
+        zss: zss ++ (reduce [xyzuvwt])
+    ]
+    return zss
 ]
 
 groupBy: function [
     "the non-overloaded version of group."
-    f [function! native!]
+    f [any-function!]
     xs [series!]
 ][
     case [
@@ -836,7 +981,7 @@ groupBy: function [
 ]
 
 groupBy*: function [
-    f [function! native!]
+    f [any-function!]
     xs' [series!]
 ][
     zss: copy []
@@ -869,18 +1014,4 @@ string-sortBy: function [
     xs [series!]
 ][
     concat (sort/compare (map :to-string xs) :f)
-]
-
-zip: function [
-    "takes two lists and returns a list of corresponding pairs. If one input list is short, excess elements of the longer list are discarded."
-    xs [series!]
-    ys [series!]
-][
-    zss: copy []
-    len: min (length? xs) (length? ys)
-    repeat i :len [
-        xy: reduce [xs/:i ys/:i]
-        zss: zss ++ (reduce [xy])
-    ]
-    return zss
 ]
