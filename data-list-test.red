@@ -654,39 +654,6 @@ Red [
 
 ===end-group===
 
-===start-group=== "filter"
---test-- "[integer!] -> [integer!]"
-    xs: [1 2 3]
-    ys: [2 3]
-    zs: filter func [x][x > 1] xs
-    --assert* [ys == zs]
-
---test-- "string! -> string!"
-    xs: "abc"
-    ys: "bc"
-    zs: filter func [x][x > #"a"] xs
-    --assert* [ys == zs]
-
---test-- "block! -> block!"
-    xs: [1 "2" 3 "4" 5 "6"]
-    ys1: [1 3 5]
-    ys2: ["2" "4" "6"]
-    zs1: filter :integer? xs
-    zs2: filter :string? xs
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-
---test-- "[[integer!]] -> [[integer!]]"
-    xs: [[1] [1 2] [1 2 3]]
-    ys1: [[1]]
-    ys2: [[1 2] [1 2 3]]
-    zs1: filter func [x][2 > length? x] xs
-    zs2: filter func [x][2 <= length? x] xs
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-
-===end-group===
-
 ===start-group=== "zip"
 
 --test-- "[integer!] -> [integer!] -> [[integer!]]"
@@ -1410,7 +1377,7 @@ Red [
 
 ===start-group=== "span"
 
---test-- "(integer! -> logic!) -> [[integer!]"
+--test-- "(integer! -> logic!) -> [integer!] -> [[integer!]"
     xs:  [1 2 3]
     ys1: [[1 2 3] []]
     ys2: [[] [1 2 3]]
@@ -1428,7 +1395,7 @@ Red [
     --assert* [ys4 == zs4]
     --assert* [ys5 == zs5]
 
---test-- "string! -> string! -> [[string!]]"
+--test-- "(char! -> logic!) -> string! -> [[string!]]"
     xs:  "abc"
     ys1: ["" "abc"]
     ys2: ["a" "bc"]
@@ -1779,52 +1746,364 @@ Red [
 
 ===start-group=== "isSubsequenceOf"
 
---test-- "[integer!] -> [integer!] -> logic!"
-    xs1: []
-    xs2: [1]
-    xs3: [1 2 4]
-    xs4: [1 2 5]
-    xs4: [1 2 7]
-    ys1: true
-    ys2: true
-    ys3: true 
-    ys4: false
-    zs1: isSubsequenceOf xs1 [1 2 3]
-    zs2: isSubsequenceOf xs2 [1 2 3]
-    zs3: isSubsequenceOf xs3 [1 2 3 4]
-    zs4: isSubsequenceOf xs4 [1 2 3 4 5]
-    zs5: isSubsequenceOf xs5 [1 2 3 4 5]
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-    --assert* [ys3 == zs3]
-    --assert* [ys4 == zs4]
-    --assert* [ys4 == zs5]
+--test-- "[integer!] -> [integer!] -> logic! 1"
+    xs: []
+    ys: true
+    zs: isSubsequenceOf xs [1 2 3]
+    --assert* [ys == zs]
 
---test-- "string! -> [string!]"
-    xs1: ""
-    xs2: "a"
-    xs3: "ab"
-    xs4: "abc"
-    xs4: "abcd"
-    xs5: "abc"
-    ys1: true 
-    ys2: true
-    ys3: true
-    ys4: false
-    ys5: true
-    zs1: isSubsequenceOf xs1 "abc"
-    zs2: isSubsequenceOf xs2 "abc"
-    zs3: isSubsequenceOf xs3 "a b c"
-    zs4: isSubsequenceOf xs4 "abd"
-    zs5: isSubsequenceOf xs5 "ab cd"
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-    --assert* [ys3 == zs3]
-    --assert* [ys4 == zs4]
-    --assert* [ys5 == zs5]
+--test-- "[integer!] -> [integer!] -> logic! 2"
+    xs: [1]
+    ys: true
+    zs: isSubsequenceOf xs [1 2 3]
+    --assert* [ys == zs]
+
+--test-- "[integer!] -> [integer!] -> logic! 3"
+    xs: [1 2 4]
+    ys: true 
+    zs: isSubsequenceOf xs [1 2 3 4]
+    --assert* [ys == zs]
+
+--test-- "[integer!] -> [integer!] -> logic! 4"
+    xs: [1 2 5]
+    ys: true
+    zs: isSubsequenceOf xs [1 2 3 4 5]
+    --assert* [ys == zs]
+
+--test-- "[integer!] -> [integer!] -> logic! 5"
+    xs: [1 2 7]
+    ys: false
+    zs: isSubsequenceOf xs [1 2 3 4 5]
+    --assert* [ys == zs]
+
+--test-- "string! -> [string!] -> logic! 1"
+    xs: ""
+    ys: true 
+    zs: isSubsequenceOf xs1 "abc"
+    --assert* [ys == zs]
+
+--test-- "string! -> [string!] -> logic! 2"
+    xs: "a"
+    ys: true
+    zs: isSubsequenceOf xs "abc"
+    --assert* [ys == zs]
+
+--test-- "string! -> [string!] -> logic! 3"
+    xs: "ab"
+    ys: true
+    zs: isSubsequenceOf xs "a b c"
+    --assert* [ys == zs]
+
+--test-- "string! -> [string!] -> logic! 4"
+    xs: "abc"
+    ys: false
+    zs: isSubsequenceOf xs "abd"
+    --assert* [ys == zs]
+
+--test-- "string! -> [string!] -> logic! 5"
+    xs: "abc f"
+    ys: false
+    zs: isSubsequenceOf xs "ab cd"
+    --assert* [ys == zs]
 
 ===end-group===
 
+===start-group=== "elem"
+
+--test-- "integer! -> [integer!] -> logic! 1"
+    x: 1
+    y: true
+    z: elem x [1 2 3]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 2"
+    x: 2
+    y: true
+    z: elem x [1 2 3]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 3"
+    x: 3
+    y: true 
+    z: elem x [1 2 3 4]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 4"
+    x: 5
+    y: true
+    z: elem x [1 2 3 4 5]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 5"
+    x: 7
+    y: false
+    z: elem x [1 2 3 4 5]
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"a"
+    y: true 
+    z: elem x "abc"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"b"
+    y: true
+    z: elem x "abc"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"c"
+    y: true
+    z: elem x "a b c"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"c"
+    y: false
+    z: elem x "abd"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"e"
+    y: false
+    z: elem x "ab cd"
+    --assert* [y == z]
+
+===end-group===
+
+===start-group=== "notElem"
+
+--test-- "integer! -> [integer!] -> logic! 1"
+    x: 1
+    y: false
+    z: notElem x [1 2 3]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 2"
+    x: 2
+    y: false
+    z: notElem x [1 2 3]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 3"
+    x: 3
+    y: false
+    z: notElem x [1 2 3 4]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 4"
+    x: 5
+    y: false
+    z: notElem x [1 2 3 4 5]
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 5"
+    x: 7
+    y: true
+    z: notElem x [1 2 3 4 5]
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"a"
+    y: false
+    z: notElem x "abc"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"b"
+    y: false
+    z: notElem x "abc"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"c"
+    y: false
+    z: notElem x "a b c"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"c"
+    y: true
+    z: notElem x "abd"
+    --assert* [y == z]
+
+--test-- "string! -> [string!] -> logic! 1"
+    x: #"e"
+    y: true
+    z: notElem x "ab cd"
+    --assert* [y == z]
+
+===end-group===
+
+===start-group=== "lookup"
+
+--test-- "word! -> map! -> integer! 1"
+    m: #(a: 1 "b" 2 3 3)
+    y: 1
+    z: lookup 'a m
+    --assert* [y == z]
+
+--test-- "string! -> map! -> integer! 2"
+    m: #(a: 1 "b" 2 3 3)
+    y: 2
+    z: lookup "b" m
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 3"
+    m: #(a: 1 "b" 2 3 3)
+    y: 3
+    z: lookup 3 m
+    --assert* [y == z]
+
+--test-- "integer! -> [integer!] -> logic! 3"
+    m: #(a: 1 "b" 2 3 3)
+    y: none
+    z: lookup 4 m
+    --assert* [y == z]
+
+===end-group===
+
+===start-group=== "find'"
+
+--test-- "integer! -> logic! -> Maybe integer! 1"
+    xs: []
+    y: Nothing
+    z: find' :negative? xs
+    --assert* [y == z]
+
+--test-- "integer! -> logic! -> Maybe integer! 2"
+    xs: [1 2 3]
+    y: Nothing
+    z: find' :negative? xs
+    --assert* [y == z]
+
+--test-- "integer! -> logic! -> Maybe integer! 3"
+    xs: [1 2 3]
+    y: 1
+    z: find' :positive? xs
+    --assert* [y == z]
+
+--test-- "integer! -> logic! -> [integer!] 2"
+    xs: [1 2 3]
+    y: Nothing
+    z: find' :negative? xs
+    --assert* [y == z]
+
+--test-- "string! -> logic! -> Maybe integer! 1"
+    xs: ""
+    y: Nothing
+    z: find' :char? xs
+    --assert* [y == z]
+
+--test-- "string! -> logic! -> Maybe integer! 2"
+    xs: "abc"
+    y: Nothing
+    z: find' func [x][x == space] xs
+    --assert* [y == z]
+
+--test-- "integer! -> logic! -> Maybe integer! 3"
+    xs: "abc"
+    y:  #"c"
+    z:  find' func [x][x == #"c"] xs
+    --assert* [y == z]
+
+--test-- "integer! -> logic! -> [integer!] 2"
+    xs: "abc"
+    y: Nothing
+    z: find' func [x][x == space] xs
+    --assert* [y == z]
+===end-group===
+
+===start-group=== "filter"
+--test-- "(integer! -> logic!) -> [integer!] -> [integer!] 1"
+    xs: [1 2 3]
+    ys: []
+    zs: filter func [x][x > 10] xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> logic!) -> [integer!] -> [integer!] 2"
+    xs: [1 2 3]
+    ys: [2 3]
+    zs: filter func [x][x > 1] xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> logic!) -> [integer!] -> [integer!] 3"
+    xs: []
+    ys: []
+    zs: filter func [x][x > 10] xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> logic!) -> string! -> string! 1"
+    xs: "abc"
+    ys: "bc"
+    zs: filter func [x][x > #"a"] xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> logic!) -> string! -> string! 2"
+    xs: ""
+    ys: ""
+    zs: filter func [x][x > #"a"] xs
+    --assert* [ys == zs]
+
+--test-- "block! -> block!"
+    xs: [1 "2" 3 "4" 5 "6"]
+    ys1: [1 3 5]
+    ys2: ["2" "4" "6"]
+    zs1: filter :integer? xs
+    zs2: filter :string? xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+--test-- "[[integer!]] -> [[integer!]]"
+    xs: [[1] [1 2] [1 2 3]]
+    ys1: [[1]]
+    ys2: [[1 2] [1 2 3]]
+    zs1: filter func [x][2 > length? x] xs
+    zs2: filter func [x][2 <= length? x] xs
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+
+===end-group===
+
+===start-group=== "partition"
+
+--test-- "(integer! -> logic!) -> [integer!] -> [[integer]] 1"
+    xs: []
+    y: [[] []]
+    z: partition :negative? xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> [[integer!]] 2"
+    xs: [1 -1 3]
+    y: [[-1] [1 3]]
+    z: partition :negative? xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> [[integer!]] 3"
+    xs: [1 2 3]
+    y:  partition :positive? xs
+    z:  [[1 2 3] []]
+    --assert* [y == z]
+
+--test-- "(string! -> logic!) -> string! -> [string] 1"
+    xs: ""
+    y: ["" ""]
+    z: partition :char? xs
+    --assert* [y == z]
+
+--test-- "(string! -> logic!) -> string! -> [string] 2"
+    xs: "abc"
+    y: ["a" "bc"]
+    z: partition func [x][x == #"a"] xs
+    --assert* [y == z]
+
+--test-- "(string! -> logic!) -> string! -> [string] 2"
+    xs: "abc"
+    y: ["abc" ""]
+    z: partition func [x][x >= #"a"] xs
+    --assert* [y == z]
+===end-group===
 
 ===start-group=== "sortBy"
 

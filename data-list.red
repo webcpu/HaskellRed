@@ -749,6 +749,80 @@ isSubsequenceOf*: function [
     ]
 ]
 
+;; Searching lists
+;; Searching by equality
+elem: function [
+    "Does the element occur in the structure?"
+    x 
+    xs [series!]
+][
+    none <> (find xs x)
+]
+
+notElem: function [
+    "notElem is the negation of elem."
+    x 
+    xs [series!]
+][
+    none == (find xs x)
+]
+
+lookup: function [
+    "looks up a key in a association list (map)"
+    key 
+    m [map!]
+][
+    get 'm/:key
+]
+
+;;Searching with a predicate
+find': function [
+    "takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element."
+    f  [any-function!] 
+    xs [series!]
+][
+    either empty? xs [none][find'* :f xs]
+]
+
+find'*: function [
+    f   [any-function!] 
+    xs' [series!]
+][
+    xs: copy xs'
+    found: false
+    while [all [(not found) (not tail? xs)]][
+        x: first xs
+        found: f x
+        xs: next xs
+    ]
+    either found [x][none]
+]
+
+filter: function [
+    "applying a predicate f to xs"
+    f [function! native!]
+    xs [series!]
+][
+    yss: either string? xs [copy ""][copy []]
+    g: func [ys x][either f x [append ys reduce [x]][ys]]
+    zss: foldl :g yss xs
+]
+
+partition: function [
+    "takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element."
+    f  [any-function!] 
+    xs [series!]
+][
+    reduce [(filter :f xs) (filter func[x][not f x] xs)]
+]
+
+partition*: function [
+    f   [any-function!] 
+    xs' [series!]
+][
+
+]
+
 groupBy: function [
     "the non-overloaded version of group."
     f [function! native!]
@@ -795,17 +869,6 @@ string-sortBy: function [
     xs [series!]
 ][
     concat (sort/compare (map :to-string xs) :f)
-]
-
-filter: function [
-    "applying a predicate f to xs"
-    f [function! native!]
-    xs [series!]
-][
-    yss: copy []
-    g: func [ys x][either f x [append ys reduce [x]][ys]]
-    zss: foldl :g yss xs
-    either string? xs [rejoin zss][zss]
 ]
 
 zip: function [
