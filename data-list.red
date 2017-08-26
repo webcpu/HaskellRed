@@ -699,6 +699,56 @@ tails: function [
     reverse (map :reverse (inits (reverse xs)))
 ]
 
+isPrefixOf: function [
+    " takes two lists and returns True iff the first list is a prefix of the second."
+    xs [series!]
+    ys [series!]
+][
+    n: length? xs
+    xs == (take' n ys) 
+]
+
+isSuffixOf: function [
+    "takes two lists and returns True iff the first list is a suffix of the second."
+    xs [series!]
+    ys [series!]
+][
+    n: length? xs
+    (reverse xs) == (take' n (reverse ys))
+]
+
+isInfixOf: function [
+    "takes two lists and returns True iff the first list is contained, wholly and intact, anywhere within the second."
+    xs [series!]
+    ys [series!]
+][
+    case [
+        (empty? xs) true
+        (none == (find ys xs)) false
+        true true
+    ]
+]
+
+isSubsequenceOf: function [
+    "takes two lists and returns True if all the elements of the first list occur, in order, in the second. The elements do not have to occur consecutively."
+    xs [series!]
+    ys [series!]
+][
+    either (empty? xs) [true][isSubsequenceOf* xs ys]
+]
+
+isSubsequenceOf*: function [
+    xs [series!]
+    ys [series!]
+][
+    either (empty? xs) [
+        return true
+    ][
+        zs: find ys (first xs)
+        either zs == none [false][isSubsequenceOf* (rest xs) zs]
+    ]
+]
+
 groupBy: function [
     "the non-overloaded version of group."
     f [function! native!]

@@ -1656,6 +1656,176 @@ Red [
 
 ===end-group===
 
+;Predicates
+===start-group=== "isPrefixOf"
+
+--test-- "[integer!] -> [integer!] -> logic!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3]
+    ys1: true
+    ys2: true
+    ys3: true
+    ys4: false
+    zs1: isPrefixOf xs1 [1 2 3]
+    zs2: isPrefixOf xs2 [1 2 3]
+    zs3: isPrefixOf xs3 [1 2 3]
+    zs4: isPrefixOf xs4 [1 2]
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [string!]"
+    xs1: ""
+    xs2: "a"
+    xs3: "ab"
+    xs4: "abc"
+    ys1: true 
+    ys2: true
+    ys3: true
+    ys4: false
+    zs1: isPrefixOf xs1 "abc"
+    zs2: isPrefixOf xs2 "abc"
+    zs3: isPrefixOf xs3 "ab"
+    zs4: isPrefixOf xs4 "ab"
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+===end-group===
+
+===start-group=== "isSuffixOf"
+
+--test-- "[integer!] -> [integer!] -> logic!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3]
+    ys1: true
+    ys2: false
+    ys3: false
+    ys4: false
+    zs1: isSuffixOf xs1 [1 2 3]
+    zs2: isSuffixOf xs2 [1 2 3]
+    zs3: isSuffixOf xs3 [1 2 3]
+    zs4: isSuffixOf xs4 [1 2]
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [string!]"
+    xs1: ""
+    xs2: "a"
+    xs3: "ab"
+    xs4: "abc"
+    ys1: true 
+    ys2: false
+    ys3: true
+    ys4: false
+    zs1: isSuffixOf xs1 "abc"
+    zs2: isSuffixOf xs2 "abc"
+    zs3: isSuffixOf xs3 "ab"
+    zs4: isSuffixOf xs4 "ab"
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+===end-group===
+
+===start-group=== "isInfixOf"
+
+--test-- "[integer!] -> [integer!] -> logic!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2]
+    xs4: [1 2 3]
+    ys1: true
+    ys2: true
+    ys3: true 
+    ys4: false
+    zs1: isInfixOf xs1 [1 2 3]
+    zs2: isInfixOf xs2 [1 2 3]
+    zs3: isInfixOf xs3 [1 2 3]
+    zs4: isInfixOf xs4 [1 2 4]
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [string!]"
+    xs1: ""
+    xs2: "a"
+    xs3: "ab"
+    xs4: "abc"
+    ys1: true 
+    ys2: true
+    ys3: true
+    ys4: false
+    zs1: isInfixOf xs1 "abc"
+    zs2: isInfixOf xs2 "abc"
+    zs3: isInfixOf xs3 "ab"
+    zs4: isInfixOf xs4 "abd"
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+
+===end-group===
+
+===start-group=== "isSubsequenceOf"
+
+--test-- "[integer!] -> [integer!] -> logic!"
+    xs1: []
+    xs2: [1]
+    xs3: [1 2 4]
+    xs4: [1 2 5]
+    xs4: [1 2 7]
+    ys1: true
+    ys2: true
+    ys3: true 
+    ys4: false
+    zs1: isSubsequenceOf xs1 [1 2 3]
+    zs2: isSubsequenceOf xs2 [1 2 3]
+    zs3: isSubsequenceOf xs3 [1 2 3 4]
+    zs4: isSubsequenceOf xs4 [1 2 3 4 5]
+    zs5: isSubsequenceOf xs5 [1 2 3 4 5]
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys4 == zs5]
+
+--test-- "string! -> [string!]"
+    xs1: ""
+    xs2: "a"
+    xs3: "ab"
+    xs4: "abc"
+    xs4: "abcd"
+    xs5: "abc"
+    ys1: true 
+    ys2: true
+    ys3: true
+    ys4: false
+    ys5: true
+    zs1: isSubsequenceOf xs1 "abc"
+    zs2: isSubsequenceOf xs2 "abc"
+    zs3: isSubsequenceOf xs3 "a b c"
+    zs4: isSubsequenceOf xs4 "abd"
+    zs5: isSubsequenceOf xs5 "ab cd"
+    --assert* [ys1 == zs1]
+    --assert* [ys2 == zs2]
+    --assert* [ys3 == zs3]
+    --assert* [ys4 == zs4]
+    --assert* [ys5 == zs5]
+
+===end-group===
+
+
 ===start-group=== "sortBy"
 
 --test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
