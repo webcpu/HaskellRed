@@ -2246,6 +2246,58 @@ Red [
 
 ===end-group===
 
+===start-group=== "findIndices"
+
+--test-- "(integer! -> logic!) -> [integer!] -> [integer!] 1"
+    xs: [1 2 3 2 1]
+    y:  []
+    z:  findIndices func [x][x == 7] xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic) -> [integer!] -> [integer!] 2"
+    xs: [1 2 3 2 1]
+    y:  [0 4]
+    z:  findIndices func [x][x == 1] xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> [integer!] 3"
+    xs: [1 2 3 2 1]
+    y: [1 3]
+    z: findIndices func [x][(mod x 2) == 0] xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> [integer!] 4"
+    xs: [1 2 3 2 1]
+    y:  [2]
+    z:  findIndices func [x][x == 3] xs
+    --assert* [y == z]
+
+--test-- "(char! -> logic!) -> string! -> [integer!] 1"
+    xs: "abc"
+    y: []
+    z: findIndices func [x][x == #"f"] xs
+    --assert* [y == z]
+
+--test-- "(char! -> logic!) -> string! -> [integer!] 2"
+    xs: "abcba"
+    y: [0 4]
+    z: findIndices func [x][x == #"a"] xs
+    --assert* [y == z]
+
+--test-- "(char! -> logic!) -> string! -> [integer!] 3"
+    xs: "abcba"
+    y:  [1 3]
+    z:  findIndices func [x][x == #"b"] xs
+    --assert* [y == z]
+
+--test-- "(char! -> logic!) -> string! -> [integer!] 4"
+    xs: "abcba"
+    y:  [2]
+    z:  findIndices func [x][x == #"c"] xs
+    --assert* [y == z]
+
+===end-group===
+
 ;;Zipping and unzipping lists
 ===start-group=== "zip"
 

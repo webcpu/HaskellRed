@@ -860,12 +860,28 @@ findIndex: function [
     r: none
     while [i <= len][
         either (f xs/:i) == true [
-            (r: (i - 1)) break
+            (r: (i - 1))
+            break
         ][
             i: i + 1
         ]
     ]
     return r
+]
+
+findIndices: function [
+    "extends findIndex, by returning the indices of all elements satisfying the predicate, in ascending order."
+    f [any-function!]
+    xs [series!]
+][
+    len: length? xs
+    i: 1
+    rs: []
+    while [i <= len][
+        rs: either (f xs/:i) == true [rs ++ (reduce [i - 1])][rs]
+        i: i + 1
+    ]
+    return rs
 ]
 
 ;;Zipping and unzipping lists
