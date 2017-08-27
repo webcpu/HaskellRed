@@ -999,6 +999,96 @@ zipWith: function [
     return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
 ]
 
+zipWith3: function [
+    "takes a function which combines three elements, as well as three lists and returns a list of their point-wise combination, analogous to zipWith."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+    zs [series!]
+][
+    rs: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs]))
+    repeat i :len [
+        r: f xs/:i ys/:i zs/:i
+        rs: rs ++ (reduce [r])
+    ]
+    return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
+]
+
+zipWith4: function [
+    "takes a function which combines three elements, as well as four lists and returns a list of their point-wise combination, analogous to zipWith."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+][
+    rs: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us]))
+    repeat i :len [
+        r: f xs/:i ys/:i zs/:i us/:i
+        rs: rs ++ (reduce [r])
+    ]
+    return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
+]
+
+zipWith5: function [
+    "takes a function which combines three elements, as well as five lists and returns a list of their point-wise combination, analogous to zipWith."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+    vs [series!]
+][
+    rs: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us vs]))
+    repeat i :len [
+        r: f xs/:i ys/:i zs/:i us/:i vs/:i
+        rs: rs ++ (reduce [r])
+    ]
+    return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
+]
+
+zipWith6: function [
+    "takes a function which combines three elements, as well as six lists and returns a list of their point-wise combination, analogous to zipWith."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+    vs [series!]
+    ws [series!]
+][
+    rs: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us vs ws]))
+    repeat i :len [
+        r: f xs/:i ys/:i zs/:i us/:i vs/:i ws/:i
+        rs: rs ++ (reduce [r])
+    ]
+    return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
+]
+
+zipWith7: function [
+    "takes a function which combines three elements, as well as seven lists and returns a list of their point-wise combination, analogous to zipWith."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+    zs [series!]
+    us [series!]
+    vs [series!]
+    ws [series!]
+    ts [series!]
+][
+    rs: copy []
+    len: minimum (reduce (map :length? reduce [xs ys zs us vs ws ts]))
+    repeat i :len [
+        r: f xs/:i ys/:i zs/:i us/:i vs/:i ws/:i ts/:i
+        rs: rs ++ (reduce [r])
+    ]
+    return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
+]
+
 groupBy: function [
     "the non-overloaded version of group."
     f [any-function!]

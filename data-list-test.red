@@ -2778,7 +2778,7 @@ Red [
     zss: zip7 xs1 xs2 xs3 xs4 xs5 xs6 xs7
     --assert* [yss == zss]
 
---test-- "[integer!] -> string! -> [integer!] -> [string!] -> [integer!] -> [string!] -> [integer!] -> [[integer! | char! | integer!]]"
+--test-- "[integer!] -> string! -> [integer!] -> [string!] -> [integer!] -> [string!] -> [integer!] -> [[integer! char! integer! char! integer! char! integer!]]"
     xs1: [1 2 3]
     xs2: "abc"
     xs3: [4 5 6]
@@ -2889,7 +2889,7 @@ Red [
 
 ===start-group=== "zipWith"
 
---test-- "(integer! -> integer -> [integer!]) -> [integer!] -> [integer!] -> [[integer!]]"
+--test-- "(integer! -> integer! -> [integer!]) -> [integer!] -> [integer!] -> [[integer!]]"
     xs1: [1 2 3]
     xs2: [4 5 6]
     yss: [[1 4] [2 5] [3 6]]
@@ -2910,7 +2910,7 @@ Red [
     zss: zipWith func [x y][reduce [x y]] xs1 xs2
     --assert* [yss == zss]
 
---test-- "(string! -> integer! -> [string | integer!]) -> [string!] -> [integer!] -> [[string! | integer!]]"
+--test-- "(string! -> integer! -> [string integer!]) -> [string!] -> [integer!] -> [[string! integer!]]"
     xs1: ["a" "bc" "def"]
     xs2: [1 2 3]
     yss: [["a" 1] ["bc" 2] ["def" 3]]
@@ -2938,32 +2938,602 @@ Red [
     zss: zipWith func [x y][x] xs1 xs2
     --assert* [yss == zss]
 
---test-- "(integer! -> integer -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[[integer!]]]"
+--test-- "(integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[[integer!]]]"
     xs1: [[1] [2] [3]]
     xs2: [[4] [5] [6]]
     yss: [[[1] [4]] [[2] [5]] [[3] [6]]]
     zss: zipWith func [x y][reduce [x y]] xs1 xs2
     --assert* [yss == zss]
 
---test-- "(integer! -> integer -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
+--test-- "(integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
     xs1: [[1] [2] [3]]
     xs2: [[4] [5] [6] [7]]
     yss: [[[1] [4]] [[2] [5]] [[3] [6]]]
     zss: zipWith func [x y][reduce [x y]] xs1 xs2
     --assert* [yss == zss]
 
---test-- "(integer! -> integer -> [integer!]) -> [[string!]] -> [[string!]] -> [[[string!]]] 1"
+--test-- "(integer! -> integer! -> [integer!]) -> [[string!]] -> [[string!]] -> [[[string!]]] 1"
     xs1: [["a"] ["b"] ["c"]]
     xs2: [["d"] ["e"] ["f"]]
     yss: [[["a"] ["d"]] [["b"] ["e"]] [["c"] ["f"]]]
     zss: zipWith func [x y][reduce [x y]] xs1 xs2
     --assert* [yss == zss]
 
---test-- "(integer! -> integer -> [integer!]) -> [[string!]] -> [[string!]] -> [[[string!]]] 2"
+--test-- "(integer! -> integer! -> [integer!]) -> [[string!]] -> [[string!]] -> [[[string!]]] 2"
     xs1: [["a"] ["b"] ["c"] "e"]
     xs2: [["d"] ["e"] ["f"]]
     yss: [[["a"] ["d"]] [["b"] ["e"]] [["c"] ["f"]]]
     zss: zipWith func [x y][reduce [x y]] xs1 xs2
+    --assert* [yss == zss]
+
+===end-group===
+
+===start-group=== "zipWith3"
+
+--test-- "(integer! -> integer! -> integer! -> [integer!]) -> [integer!] -> [integer!] -> [integer!] -> [[integer! integer! integer!]]"
+    xs1: [1 2 3]
+    xs2: [4 5 6]
+    xs3: [7 8 9]
+    yss: [[1 4 7] [2 5 8] [3 6 9]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "[(integer! -> char! -> integer! -> [integer! char! integer!]) -> integer!] -> string! -> [[integer! char! integer!]]"
+    xs1: [1 2 3]
+    xs2: "abc"
+    xs3: [4 5 6]
+    yss: [[1 #"a" 4] [2 #"b" 5] [3 #"c" 6]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "(string! -> string! -> string! -> [string!]) -> [string!] -> [string!] -> [string] -> [[string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: ["b" "de" "ghi"]
+    xs3: ["c" "fg" "jkl"]
+    yss: [["a" "b" "c"] ["bc" "de" "fg"] ["def" "ghi" "jkl"]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "(string! -> integer! -> string! -> [string integer! string!]) -> [string!] -> [integer!] -> [string!] -> [[string! integer! string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: [1 2 3]
+    xs3: ["b" "cd" "efg"]
+    yss: [["a" 1 "b"] ["bc" 2 "cd"] ["def" 3 "efg"]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> [char!]) -> string! -> string! -> string! -> [[char!]] 1"
+    xs1: "abc"
+    xs2: "123"
+    xs3: "def"
+    yss: [[#"a" #"1" #"d"] [#"b" #"2" #"e"] [#"c" #"3" #"f"]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> [char!]) -> string! -> string! -> string! -> [[char!]] 2"
+    xs1: "abcb"
+    xs2: "123"
+    xs3: "def"
+    yss: [[#"a" #"1" #"d"] [#"b" #"2" #"e"] [#"c" #"3" #"f"]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char!) -> string! -> string! -> string! -> string!"
+    xs1: "abcd"
+    xs2: "123"
+    xs3: "def"
+    yss: "abc"
+    zss: zipWith3 func [x y z][x] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [string!] -> [[[integer!]]] 1"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6]]
+    xs3: [[7] [8] [9]]
+    yss: [[[1] [4] [7]] [[2] [5] [8]] [[3] [6] [9]]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6] [7]]
+    xs3: [[7] [8] [9]]
+    yss: [[[1] [4] [7]] [[2] [5] [8]] [[3] [6] [9]]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]]-> [[[string!]]] 1"
+    xs1: [["a"] ["b"] ["c"]]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    yss: [[["a"] ["d"] ["g"]] [["b"] ["e"] ["h"]] [["c"] ["f"] ["i"]]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]]-> [[[string!]]] 2"
+    xs1: [["a"] ["b"] ["c"] "e"]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    yss: [[["a"] ["d"] ["g"]] [["b"] ["e"] ["h"]] [["c"] ["f"] ["i"]]]
+    zss: zipWith3 func [x y z][reduce [x y z]] xs1 xs2 xs3
+    --assert* [yss == zss]
+
+===end-group===
+
+===start-group=== "zipWith4"
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> [integer!]) -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [[integer! integer! integer! integer!]]"
+    xs1: [1 2 3]
+    xs2: [4 5 6]
+    xs3: [7 8 9]
+    xs4: [10 11 12]
+    yss: [[1 4 7 10] [2 5 8 11] [3 6 9 12]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "[(integer! -> char! -> integer! -> char! -> [integer! char!]) -> integer!] -> string! -> [[integer! char! integer!]]"
+    xs1: [1 2 3]
+    xs2: "abc"
+    xs3: [4 5 6]
+    xs4: "def"
+    yss: [[1 #"a" 4 #"d"] [2 #"b" 5 #"e"] [3 #"c" 6 #"f"]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "(string! -> string! -> string! -> string! -> [string!]) -> [string!] -> [string!] -> [string] -> [[string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: ["b" "de" "ghi"]
+    xs3: ["c" "fg" "jkl"]
+    xs4: ["d" "hi" "mno"]
+    yss: [["a" "b" "c" "d"] ["bc" "de" "fg" "hi"] ["def" "ghi" "jkl" "mno"]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "(string! -> integer! -> string! -> integer! -> [string integer! string! integer!]) -> [string!] -> [integer!] -> [string!] -> [integer!] -> [[string! integer! string! integer!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: [1 2 3]
+    xs3: ["b" "cd" "efg"]
+    xs4: [4 5 6]
+    yss: [["a" 1 "b" 4] ["bc" 2 "cd" 5] ["def" 3 "efg" 6]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> [char!]) -> string! -> string! -> string! -> string! -> [[char!]] 1"
+    xs1: "abc"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    yss: [[#"a" #"1" #"d" #"4"] [#"b" #"2" #"e" #"5"] [#"c" #"3" #"f" #"6"]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> [char!]) -> string! -> string! -> string! -> string! -> [[char!]] 2"
+    xs1: "abcb"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    yss: [[#"a" #"1" #"d" #"4"] [#"b" #"2" #"e" #"5"] [#"c" #"3" #"f" #"6"]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char! -> char!) -> string! -> string! -> string! -> string! -> string!"
+    xs1: "abcd"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    yss: "abc"
+    zss: zipWith4 func [x y z u][x] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 1"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    yss: [[[1] [4] [7] [10]] [[2] [5] [8] [11]] [[3] [6] [9] [12]]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6] [7]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    yss: [[[1] [4] [7] [10]] [[2] [5] [8] [11]] [[3] [6] [9] [12]]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]]-> [[[string!]]] 1"
+    xs1: [["a"] ["b"] ["c"]]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    yss: [[["a"] ["d"] ["g"] ["j"]] [["b"] ["e"] ["h"] ["k"]] [["c"] ["f"] ["i"] ["l"]]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]]-> [[[string!]]] 2"
+    xs1: [["a"] ["b"] ["c"] "e"]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    yss: [[["a"] ["d"] ["g"] ["j"]] [["b"] ["e"] ["h"] ["k"]] [["c"] ["f"] ["i"] ["l"]]]
+    zss: zipWith4 func [x y z u][reduce [x y z u]] xs1 xs2 xs3 xs4
+    --assert* [yss == zss]
+
+===end-group===
+
+===start-group=== "zipWith5"
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [[integer! integer! integer! integer! integer!]]"
+    xs1: [1 2 3]
+    xs2: [4 5 6]
+    xs3: [7 8 9]
+    xs4: [10 11 12]
+    xs5: [13 14 15]
+    yss: [[1 4 7 10 13] [2 5 8 11 14] [3 6 9 12 15]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "[(integer! -> char! -> integer! -> char! -> [integer! char!]) -> integer!] -> string! -> [[integer! char! integer!]]"
+    xs1: [1 2 3]
+    xs2: "abc"
+    xs3: [4 5 6]
+    xs4: "def"
+    xs5: [7 8 9]
+    yss: [[1 #"a" 4 #"d" 7] [2 #"b" 5 #"e" 8] [3 #"c" 6 #"f" 9]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "(string! -> string! -> string! -> string! -> [string!]) -> [string!] -> [string!] -> [string] -> [[string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: ["b" "de" "ghi"]
+    xs3: ["c" "fg" "jkl"]
+    xs4: ["d" "hi" "mno"]
+    xs5: ["e" "jk" "pqr"]
+    yss: [["a" "b" "c" "d" "e"] ["bc" "de" "fg" "hi" "jk"] ["def" "ghi" "jkl" "mno" "pqr"]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "(string! -> integer! -> string! -> integer! -> string! -> [string integer! string! integer! string]) -> [string!] -> [integer!] -> [string!] -> [integer!] -> [string!] -> [[string! integer! string! integer! string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: [1 2 3]
+    xs3: ["b" "cd" "efg"]
+    xs4: [4 5 6]
+    xs5: ["c" "ef" "hij"]
+    yss: [["a" 1 "b" 4 "c"] ["bc" 2 "cd" 5 "ef"] ["def" 3 "efg" 6 "hij"]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> char -> [char!]) -> string! -> string! -> string! -> string! -> string! -> string! -> [[char!]] 1"
+    xs1: "abc"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    yss: [[#"a" #"1" #"d" #"4" #"g"] [#"b" #"2" #"e" #"5" #"h"] [#"c" #"3" #"f" #"6" #"i"]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> [char!]) -> string! -> string! -> string! -> string! -> string! -> [[char!]] 2"
+    xs1: "abcb"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    yss: [[#"a" #"1" #"d" #"4" #"g"] [#"b" #"2" #"e" #"5" #"h"] [#"c" #"3" #"f" #"6" #"i"]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char! -> char! -> char!) -> string! -> string! -> string! -> string! -> string! -> string!"
+    xs1: "abcd"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    yss: "abc"
+    zss: zipWith5 func [x y z u v][x] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 1"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    xs5: [[13] [14] [15]]
+    yss: [[[1] [4] [7] [10] [13]] [[2] [5] [8] [11] [14]] [[3] [6] [9] [12] [15]]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6] [7]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    xs5: [[13] [14] [15]]
+    yss: [[[1] [4] [7] [10] [13]] [[2] [5] [8] [11] [14]] [[3] [6] [9] [12] [15]]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] ->  [[string!]] -> [[string!]] -> [[string!]] -> [[string!]]-> [[[string!]]] 1"
+    xs1: [["a"] ["b"] ["c"]]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    xs5: [["m"] ["n"] ["o"]]
+    yss: [[["a"] ["d"] ["g"] ["j"] ["m"]] [["b"] ["e"] ["h"] ["k"] ["n"]] [["c"] ["f"] ["i"] ["l"] ["o"]]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] ->  [[string!]] -> [[string!]] -> [[string!]] -> [[string!]]-> [[[string!]]] 2"
+    xs1: [["a"] ["b"] ["c"] "e"]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    xs5: [["m"] ["n"] ["o"]]
+    yss: [[["a"] ["d"] ["g"] ["j"] ["m"]] [["b"] ["e"] ["h"] ["k"] ["n"]] [["c"] ["f"] ["i"] ["l"] ["o"]]]
+    zss: zipWith5 func [x y z u v][reduce [x y z u v]] xs1 xs2 xs3 xs4 xs5
+    --assert* [yss == zss]
+
+===end-group===
+
+===start-group=== "zipWith6"
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [[integer! integer! integer! integer! integer! integer!]]"
+    xs1: [1 2 3]
+    xs2: [4 5 6]
+    xs3: [7 8 9]
+    xs4: [10 11 12]
+    xs5: [13 14 15]
+    xs6: [16 17 18]
+    yss: [[1 4 7 10 13 16] [2 5 8 11 14 17] [3 6 9 12 15 18]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "[(integer! -> char! -> integer! -> char! -> integer! -> [integer! char! integer! char! integer! char!]) -> integer!] -> string! -> [[integer! char! integer! char! integer! char!]]"
+    xs1: [1 2 3]
+    xs2: "abc"
+    xs3: [4 5 6]
+    xs4: "def"
+    xs5: [7 8 9]
+    xs6: "ghi"
+    yss: [[1 #"a" 4 #"d" 7 #"g"] [2 #"b" 5 #"e" 8 #"h"] [3 #"c" 6 #"f" 9 #"i"]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "(string! -> string! -> string! -> string! -> string! -> [string!]) -> [string!] -> [string!] -> [string!] -> [string] -> [string!] -> [string!] -> [[string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: ["b" "de" "ghi"]
+    xs3: ["c" "fg" "jkl"]
+    xs4: ["d" "hi" "mno"]
+    xs5: ["e" "jk" "pqr"]
+    xs6: ["f" "lm" "stu"]
+    yss: [["a" "b" "c" "d" "e" "f"] ["bc" "de" "fg" "hi" "jk" "lm"] ["def" "ghi" "jkl" "mno" "pqr" "stu"]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "(string! -> integer! -> string! -> integer! -> string! -> [string integer! string! integer! string]) -> [string!] -> [integer!] -> [string!] -> [integer!] -> [[string! integer! string! integer! string! integer!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: [1 2 3]
+    xs3: ["b" "cd" "efg"]
+    xs4: [4 5 6]
+    xs5: ["c" "ef" "hij"]
+    xs6: [7 8 9]
+    yss: [["a" 1 "b" 4 "c" 7] ["bc" 2 "cd" 5 "ef" 8] ["def" 3 "efg" 6 "hij" 9]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> char -> char -> [char!]) -> string! -> string! -> string! -> string! -> string! -> string! -> [[char!]] 1"
+    xs1: "abc"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    xs6: "789"
+    yss: [[#"a" #"1" #"d" #"4" #"g" #"7"] [#"b" #"2" #"e" #"5" #"h" #"8"] [#"c" #"3" #"f" #"6" #"i" #"9"]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> char -> char -> [char!]) -> string! -> string! -> string! -> string! -> string! -> string! -> [[char!]] 2"
+    xs1: "abcb"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    xs6: "789"
+    yss: [[#"a" #"1" #"d" #"4" #"g" #"7"] [#"b" #"2" #"e" #"5" #"h" #"8"] [#"c" #"3" #"f" #"6" #"i" #"9"]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char! -> char! -> char! -> char!) -> string! -> string! -> string! -> string! -> string! -> string! -> string!"
+    xs1: "abcd"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    xs6: "789"
+    yss: "abc"
+    zss: zipWith6 func [x y z u v w][x] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 1"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    xs5: [[13] [14] [15]]
+    xs6: [[16] [17] [18]]
+    yss: [[[1] [4] [7] [10] [13] [16]] [[2] [5] [8] [11] [14] [17]] [[3] [6] [9] [12] [15] [18]]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6] [7]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    xs5: [[13] [14] [15]]
+    xs6: [[16] [17] [18]]
+    yss: [[[1] [4] [7] [10] [13] [16]] [[2] [5] [8] [11] [14] [17]] [[3] [6] [9] [12] [15] [18]]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[[string!]]] 1"
+    xs1: [["a"] ["b"] ["c"]]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    xs5: [["m"] ["n"] ["o"]]
+    xs6: [["p"] ["q"] ["r"]]
+    yss: [[["a"] ["d"] ["g"] ["j"] ["m"] ["p"]] [["b"] ["e"] ["h"] ["k"] ["n"] ["q"]] [["c"] ["f"] ["i"] ["l"] ["o"] ["r"]]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[[string!]]] 2"
+    xs1: [["a"] ["b"] ["c"] "e"]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    xs5: [["m"] ["n"] ["o"]]
+    xs6: [["p"] ["q"] ["r"]]
+    yss: [[["a"] ["d"] ["g"] ["j"] ["m"] ["p"]] [["b"] ["e"] ["h"] ["k"] ["n"] ["q"]] [["c"] ["f"] ["i"] ["l"] ["o"] ["r"]]]
+    zss: zipWith6 func [x y z u v w][reduce [x y z u v w]] xs1 xs2 xs3 xs4 xs5 xs6
+    --assert* [yss == zss]
+
+===end-group===
+
+===start-group=== "zipWith7"
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [integer!] -> [[integer! integer! integer! integer! integer! integer! integer!]]"
+    xs1: [1 2 3]
+    xs2: [4 5 6]
+    xs3: [7 8 9]
+    xs4: [10 11 12]
+    xs5: [13 14 15]
+    xs6: [16 17 18]
+    xs7: [19 20 21]
+    yss: [[1 4 7 10 13 16 19] [2 5 8 11 14 17 20] [3 6 9 12 15 18 21]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "[(integer! -> char! -> integer! -> char! -> integer! -> char! -> integer! -> [integer! char! integer! char! integer! char! integer!]) -> [integer!] -> string! -> [integer!] -> string! -> [integer!] -> string! -> [integer!] -> [[integer! char! integer! char! integer! char! integer!]]"
+    xs1: [1 2 3]
+    xs2: "abc"
+    xs3: [4 5 6]
+    xs4: "def"
+    xs5: [7 8 9]
+    xs6: "ghi"
+    xs7: [10 11 12]
+    yss: [[1 #"a" 4 #"d" 7 #"g" 10] [2 #"b" 5 #"e" 8 #"h" 11] [3 #"c" 6 #"f" 9 #"i" 12]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "(string! -> string! -> string! -> string! -> string! -> string! -> string! -> [string!]) -> [string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string] -> [string!] -> [string!] -> [string!] -> [[string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: ["b" "de" "ghi"]
+    xs3: ["c" "fg" "jkl"]
+    xs4: ["d" "hi" "mno"]
+    xs5: ["e" "jk" "pqr"]
+    xs6: ["f" "lm" "stu"]
+    xs7: ["g" "op" "vwx"]
+    yss: [["a" "b" "c" "d" "e" "f" "g"] ["bc" "de" "fg" "hi" "jk" "lm" "op"] ["def" "ghi" "jkl" "mno" "pqr" "stu" "vwx"]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "(string! -> integer! -> string! -> integer! -> string! -> integer! -> string! -> [string integer! string! integer! string integer! string]) -> [string!] -> [integer!] -> [string!] -> [integer!] -> [string!] -> [integer!] -> [string!] -> [[string! integer! string! integer! string! integer! string!]]"
+    xs1: ["a" "bc" "def"]
+    xs2: [1 2 3]
+    xs3: ["b" "cd" "efg"]
+    xs4: [4 5 6]
+    xs5: ["c" "ef" "hij"]
+    xs6: [7 8 9]
+    xs7: ["d" "gh" "klm"]
+    yss: [["a" 1 "b" 4 "c" 7 "d"] ["bc" 2 "cd" 5 "ef" 8 "gh"] ["def" 3 "efg" 6 "hij" 9 "klm"]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> char -> char -> char! -> [char!]) -> string! -> string! -> string! -> string! -> string! -> string! -> string! -> [[char!]] 1"
+    xs1: "abc"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    xs6: "789"
+    xs7: "jkl"
+    yss: [[#"a" #"1" #"d" #"4" #"g" #"7" #"j"] [#"b" #"2" #"e" #"5" #"h" #"8" #"k"] [#"c" #"3" #"f" #"6" #"i" #"9" #"l"]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char -> char -> char -> char! -> [char!]) -> string! -> string! -> string! -> string! -> string! -> string! -> string! -> [[char!]] 2"
+    xs1: "abcb"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    xs6: "789"
+    xs7: "jkl"
+    yss: [[#"a" #"1" #"d" #"4" #"g" #"7" #"j"] [#"b" #"2" #"e" #"5" #"h" #"8" #"k"] [#"c" #"3" #"f" #"6" #"i" #"9" #"l"]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> char! -> char! -> char! -> char! -> char! -> char!) -> string! -> string! -> string! -> string! -> string! -> string! -> string! -> string!"
+    xs1: "abcd"
+    xs2: "123"
+    xs3: "def"
+    xs4: "456"
+    xs5: "ghi"
+    xs6: "789"
+    xs7: "jkl"
+    yss: "abc"
+    zss: zipWith7 func [x y z u v w t][x] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 1"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    xs5: [[13] [14] [15]]
+    xs6: [[16] [17] [18]]
+    xs7: [[19] [20] [21]]
+    yss: [[[1] [4] [7] [10] [13] [16] [19]] [[2] [5] [8] [11] [14] [17] [20]] [[3] [6] [9] [12] [15] [18] [21]]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "(integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> integer! -> [integer!]) -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[integer!]] -> [[[integer!]]] 2"
+    xs1: [[1] [2] [3]]
+    xs2: [[4] [5] [6] [7]]
+    xs3: [[7] [8] [9]]
+    xs4: [[10] [11] [12]]
+    xs5: [[13] [14] [15]]
+    xs6: [[16] [17] [18]]
+    xs7: [[19] [20] [21]]
+    yss: [[[1] [4] [7] [10] [13] [16] [19]] [[2] [5] [8] [11] [14] [17] [20]] [[3] [6] [9] [12] [15] [18] [21]]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[[string!]]] 1"
+    xs1: [["a"] ["b"] ["c"]]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    xs5: [["m"] ["n"] ["o"]]
+    xs6: [["p"] ["q"] ["r"]]
+    xs7: [["s"] ["t"] ["u"]]
+    yss: [[["a"] ["d"] ["g"] ["j"] ["m"] ["p"] ["s"]] [["b"] ["e"] ["h"] ["k"] ["n"] ["q"] ["t"]] [["c"] ["f"] ["i"] ["l"] ["o"] ["r"] ["u"]]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
+    --assert* [yss == zss]
+
+--test-- "([string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!] -> [string!]) -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[string!]] -> [[[string!]]] 2"
+    xs1: [["a"] ["b"] ["c"] "e"]
+    xs2: [["d"] ["e"] ["f"]]
+    xs3: [["g"] ["h"] ["i"]]
+    xs4: [["j"] ["k"] ["l"]]
+    xs5: [["m"] ["n"] ["o"]]
+    xs6: [["p"] ["q"] ["r"]]
+    xs7: [["s"] ["t"] ["u"]]
+    yss: [[["a"] ["d"] ["g"] ["j"] ["m"] ["p"] ["s"]] [["b"] ["e"] ["h"] ["k"] ["n"] ["q"] ["t"]] [["c"] ["f"] ["i"] ["l"] ["o"] ["r"] ["u"]]]
+    zss: zipWith7 func [x y z u v w t][reduce [x y z u v w t]] xs1 xs2 xs3 xs4 xs5 xs6 xs7
     --assert* [yss == zss]
 
 ===end-group===
@@ -2992,7 +3562,7 @@ Red [
 
 ===start-group=== "insertBy"
 
---test-- "(integer! -> integer -> logic!) -> [integer!] -> [integer!]"
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
     xs:  [1 2 3]
     ys1: [1 2 3]
     ys2: [3 2 1]
