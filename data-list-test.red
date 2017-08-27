@@ -3538,6 +3538,402 @@ Red [
 
 ===end-group===
 
+===start-group=== "unzip"
+
+--test-- "[[integer!]] -> [[integer!] [integer!]]"
+    xss: [[1 4] [2 5] [3 6]]
+    ys1: [1 2 3]
+    ys2: [4 5 6]
+    yss: reduce [ys1 ys2]
+    zss: unzip xss
+    --assert* [yss == zss]
+
+--test-- "[[integer! char!]] -> [[integer!] [char!]]"
+    xss: [[1 #"a"] [2 #"b"] [3 #"c"]]
+    ys1: [1 2 3]
+    ys2: "abc"
+    yss: reduce [ys1 ys2]
+    zss: unzip xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[string!] [string!]]"
+    xss: [["a" "b"] ["bc" "de"] ["def" "ghi"]]
+    ys1: ["a" "bc" "def"]
+    ys2: ["b" "de" "ghi"]
+    yss: reduce [ys1 ys2] 
+    zss: unzip xss
+    --assert* [yss == zss]
+
+--test-- "[string! integer!] -> [[string!] [integer!]]"
+    xss: [["a" 1] ["bc" 2] ["def" 3]]
+    ys1: ["a" "bc" "def"]
+    ys2: [1 2 3]
+    yss: reduce [ys1 ys2]
+    zss: unzip xss
+    --assert* [yss == zss]
+
+--test-- "[char! char!] -> [string!]]"
+    xss: [[#"a" #"1"] [#"b" #"2"] [#"c" #"3"]]
+    ys1: "abc"
+    ys2: "123"
+    yss: reduce [ys1 ys2]
+    zss: unzip xss
+    --assert* [yss == zss]
+
+--test-- "[[[integer!]]] -> [[integer!] [integer!]]"
+    xss: [[[1] [4]] [[2] [5]] [[3] [6]]]
+    ys1: [[1] [2] [3]]
+    ys2: [[4] [5] [6]]
+    yss: reduce [ys1 ys2]
+    zss: unzip xss
+    --assert* [yss == zss]
+===end-group===
+
+===start-group=== "unzip3"
+
+--test-- "[[integer!]] -> [[integer!] [integer!] [integer!]]"
+    xss: [[1 4 7] [2 5 8] [3 6 9]]
+    ys1: [1 2 3]
+    ys2: [4 5 6]
+    ys3: [7 8 9]
+    yss: reduce [ys1 ys2 ys3]
+    zss: unzip3 xss
+    --assert* [yss == zss]
+
+--test-- "[[integer! char! integer!]] -> [[integer!] [char!] [integer!]]"
+    xss: [[1 #"a" 4] [2 #"b" 5] [3 #"c" 6]]
+    ys1: [1 2 3]
+    ys2: "abc"
+    ys3: [4 5 6]
+    yss: reduce [ys1 ys2 ys3]
+    zss: unzip3 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[string!] [string!] [string!]]"
+    xss: [["a" "b" "c"] ["bc" "cd" "de"] ["def" "ghi" "jkl"]]
+    ys1: ["a" "bc" "def"]
+    ys2: ["b" "cd" "ghi"]
+    ys3: ["c" "de" "jkl"]
+    yss: reduce [ys1 ys2 ys3] 
+    zss: unzip3 xss
+    --assert* [yss == zss]
+
+--test-- "[[string! integer! string!]] -> [[string!] [integer!] [string!]]"
+    xss: [["a" 1 "d"] ["bc" 2 "e"] ["def" 3 "f"]]
+    ys1: ["a" "bc" "def"]
+    ys2: [1 2 3]
+    ys3: ["d" "e" "f"]
+    yss: reduce [ys1 ys2 ys3]
+    zss: unzip3 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[char!] [char!] [char!]]"
+    xss: [[#"a" #"1" #"d"] [#"b" #"2" #"e"] [#"c" #"3" #"f"]]
+    ys1: "abc"
+    ys2: "123"
+    ys3: "def"
+    yss: reduce [ys1 ys2 ys3]
+    zss: unzip3 xss
+    --assert* [yss == zss]
+
+--test-- "[[[integer!]]] -> [[integer!] [integer!] [integer!]]"
+    xss: [[[1] [4] [7]] [[2] [5] [8]] [[3] [6] [9]]]
+    ys1: [[1] [2] [3]]
+    ys2: [[4] [5] [6]]
+    ys3: [[7] [8] [9]]
+    yss: reduce [ys1 ys2 ys3]
+    zss: unzip3 xss
+    --assert* [yss == zss]
+===end-group===
+
+===start-group=== "unzip4"
+
+--test-- "[[integer!]] -> [[integer!] [integer!] [integer!] [integer!]]"
+    xss: [[1 4 7 10] [2 5 8 11] [3 6 9 12]]
+    ys1: [1 2 3]
+    ys2: [4 5 6]
+    ys3: [7 8 9]
+    ys4: [10 11 12]
+    yss: reduce [ys1 ys2 ys3 ys4]
+    zss: unzip4 xss
+    --assert* [yss == zss]
+
+--test-- "[[integer! char! integer! char!]] -> [[integer!] [char!] [integer!] [char!]]"
+    xss: [[1 #"a" 4 "d"] [2 #"b" 5 "e"] [3 #"c" 6 "f"]]
+    ys1: [1 2 3]
+    ys2: "abc"
+    ys3: [4 5 6]
+    ys4: ["d" "e" "f"]
+    yss: reduce [ys1 ys2 ys3 ys4]
+    zss: unzip4 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[string!] [string!] [string!] [string!]]"
+    xss: [["a" "b" "c" "d"] ["bc" "cd" "de" "ef"] ["def" "ghi" "jkl" "mno"]]
+    ys1: ["a" "bc" "def"]
+    ys2: ["b" "cd" "ghi"]
+    ys3: ["c" "de" "jkl"]
+    ys4: ["d" "ef" "mno"]
+    yss: reduce [ys1 ys2 ys3 ys4] 
+    zss: unzip4 xss
+    --assert* [yss == zss]
+
+--test-- "[[string! integer! string! integer!]] -> [[string!] [integer!] [string!] [integer!]]"
+    xss: [["a" 1 "d" 4] ["bc" 2 "e" 5] ["def" 3 "f" 6]]
+    ys1: ["a" "bc" "def"]
+    ys2: [1 2 3]
+    ys3: ["d" "e" "f"]
+    ys4: [4 5 6]
+    yss: reduce [ys1 ys2 ys3 ys4]
+    zss: unzip4 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[char!] [char!] [char!] [char!]]"
+    xss: [[#"a" #"1" #"d" #"4"] [#"b" #"2" #"e" #"5"] [#"c" #"3" #"f" #"6"]]
+    ys1: "abc"
+    ys2: "123"
+    ys3: "def"
+    ys4: "456"
+    yss: reduce [ys1 ys2 ys3 ys4]
+    zss: unzip4 xss
+    --assert* [yss == zss]
+
+--test-- "[[[integer!]]] -> [[integer!] [integer!] [integer!] [integer!]]"
+    xss: [[[1] [4] [7] [10]] [[2] [5] [8] [11]] [[3] [6] [9] [12]]]
+    ys1: [[1] [2] [3]]
+    ys2: [[4] [5] [6]]
+    ys3: [[7] [8] [9]]
+    ys4: [[10] [11] [12]]
+    yss: reduce [ys1 ys2 ys3 ys4]
+    zss: unzip4 xss
+    --assert* [yss == zss]
+===end-group===
+
+===start-group=== "unzip5"
+
+--test-- "[[integer!]] -> [[integer!] [integer!] [integer!] [integer!] [integer!]]"
+    xss: [[1 4 7 10 13] [2 5 8 11 14] [3 6 9 12 15]]
+    ys1: [1 2 3]
+    ys2: [4 5 6]
+    ys3: [7 8 9]
+    ys4: [10 11 12]
+    ys5: [13 14 15]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5]
+    zss: unzip5 xss
+    --assert* [yss == zss]
+
+--test-- "[[integer! char! integer! char! integer!]] -> [[integer!] [char!] [integer!] [char!] [integer!]]"
+    xss: [[1 #"a" 4 "d" 7] [2 #"b" 5 "e" 8] [3 #"c" 6 "f" 9]]
+    ys1: [1 2 3]
+    ys2: "abc"
+    ys3: [4 5 6]
+    ys4: ["d" "e" "f"]
+    ys5: [7 8 9]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5]
+    zss: unzip5 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[string!] [string!] [string!] [string!] [string!]]"
+    xss: [["a" "b" "c" "d" "e"] ["bc" "cd" "de" "ef" "gh"] ["def" "ghi" "jkl" "mno" "pqr"]]
+    ys1: ["a" "bc" "def"]
+    ys2: ["b" "cd" "ghi"]
+    ys3: ["c" "de" "jkl"]
+    ys4: ["d" "ef" "mno"]
+    ys5: ["e" "gh" "pqr"]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5]
+    zss: unzip5 xss
+    --assert* [yss == zss]
+
+--test-- "[[string! integer! string! integer! string!]] -> [[string!] [integer!] [string!] [integer!] [string!]]"
+    xss: [["a" 1 "d" 4 "g"] ["bc" 2 "e" 5 "h"] ["def" 3 "f" 6 "i"]]
+    ys1: ["a" "bc" "def"]
+    ys2: [1 2 3]
+    ys3: ["d" "e" "f"]
+    ys4: [4 5 6]
+    ys5: ["g" "h" "i"]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5]
+    zss: unzip5 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[char!] [char!] [char!] [char!] [char!]]"
+    xss: [[#"a" #"1" #"d" #"4" #"g"] [#"b" #"2" #"e" #"5" #"h"] [#"c" #"3" #"f" #"6" #"i"]]
+    ys1: "abc"
+    ys2: "123"
+    ys3: "def"
+    ys4: "456"
+    ys5: "ghi"
+    yss: reduce [ys1 ys2 ys3 ys4 ys5]
+    zss: unzip5 xss
+    --assert* [yss == zss]
+
+--test-- "[[[integer!]]] -> [[integer!] [integer!] [integer!] [integer!] [integer!]]"
+    xss: [[[1] [4] [7] [10] [13]] [[2] [5] [8] [11] [14]] [[3] [6] [9] [12] [15]]]
+    ys1: [[1] [2] [3]]
+    ys2: [[4] [5] [6]]
+    ys3: [[7] [8] [9]]
+    ys4: [[10] [11] [12]]
+    ys5: [[13] [14] [15]]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5]
+    zss: unzip5 xss
+    --assert* [yss == zss]
+===end-group===
+
+===start-group=== "unzip6"
+
+--test-- "[[integer!]] -> [[integer!] [integer!] [integer!] [integer!] [integer!] [integer!]]"
+    xss: [[1 4 7 10 13 16] [2 5 8 11 14 17] [3 6 9 12 15 18]]
+    ys1: [1 2 3]
+    ys2: [4 5 6]
+    ys3: [7 8 9]
+    ys4: [10 11 12]
+    ys5: [13 14 15]
+    ys6: [16 17 18]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6]
+    zss: unzip6 xss
+    --assert* [yss == zss]
+
+--test-- "[[integer! char! integer! char! integer! char!]] -> [[integer!] [char!] [integer!] [char!] [interger!] [char!]]"
+    xss: [[1 #"a" 4 "d" 7 "g"] [2 #"b" 5 "e" 8 "h"] [3 #"c" 6 "f" 9 "i"]]
+    ys1: [1 2 3]
+    ys2: "abc"
+    ys3: [4 5 6]
+    ys4: ["d" "e" "f"]
+    ys5: [7 8 9]
+    ys6: ["g" "h" "i"]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6]
+    zss: unzip6 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[string!] [string!] [string!] [string!] [string!] [string!]]"
+    xss: [["a" "b" "c" "d" "e" "f"] ["bc" "cd" "de" "ef" "gh" "ij"] ["def" "ghi" "jkl" "mno" "pqr" "stu"]]
+    ys1: ["a" "bc" "def"]
+    ys2: ["b" "cd" "ghi"]
+    ys3: ["c" "de" "jkl"]
+    ys4: ["d" "ef" "mno"]
+    ys5: ["e" "gh" "pqr"]
+    ys6: ["f" "ij" "stu"]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6]
+    zss: unzip6 xss
+    --assert* [yss == zss]
+
+--test-- "[[string! integer! string! integer! string! integer!]] -> [[string!] [integer!] [string!] [integer! string! integer!]]"
+    xss: [["a" 1 "d" 4 "g" 7] ["bc" 2 "e" 5 "h" 8] ["def" 3 "f" 6 "i" 9]]
+    ys1: ["a" "bc" "def"]
+    ys2: [1 2 3]
+    ys3: ["d" "e" "f"]
+    ys4: [4 5 6]
+    ys5: ["g" "h" "i"]
+    ys6: [7 8 9]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6]
+    zss: unzip6 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[char!] [char!] [char!] [char!] [char!] [char!]]"
+    xss: [[#"a" #"1" #"d" #"4" #"g" #"j"] [#"b" #"2" #"e" #"5" #"h" #"k"] [#"c" #"3" #"f" #"6" #"i" #"l"]]
+    ys1: "abc"
+    ys2: "123"
+    ys3: "def"
+    ys4: "456"
+    ys5: "ghi"
+    ys6: "jkl"
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6]
+    zss: unzip6 xss
+    --assert* [yss == zss]
+
+--test-- "[[[integer!]]] -> [[integer!] [integer!] [integer!] [integer!] [string!] [string!]]"
+    xss: [[[1] [4] [7] [10] [13] [16]] [[2] [5] [8] [11] [14] [17]] [[3] [6] [9] [12] [15] [18]]]
+    ys1: [[1] [2] [3]]
+    ys2: [[4] [5] [6]]
+    ys3: [[7] [8] [9]]
+    ys4: [[10] [11] [12]]
+    ys5: [[13] [14] [15]]
+    ys6: [[16] [17] [18]]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6]
+    zss: unzip6 xss
+    --assert* [yss == zss]
+===end-group===
+
+===start-group=== "unzip7"
+
+--test-- "[[integer!]] -> [[integer!] [integer!] [integer!] [integer!] [integer!] [integer!] [integer!]]"
+    xss: [[1 4 7 10 13 16 19] [2 5 8 11 14 17 20] [3 6 9 12 15 18 21]]
+    ys1: [1 2 3]
+    ys2: [4 5 6]
+    ys3: [7 8 9]
+    ys4: [10 11 12]
+    ys5: [13 14 15]
+    ys6: [16 17 18]
+    ys7: [19 20 21]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6 ys7]
+    zss: unzip7 xss
+    --assert* [yss == zss]
+
+--test-- "[[integer! char! integer! char! integer! char!]] -> [[integer!] [char!] [integer!] [char!] [interger!] [char!] [interger!]]"
+    xss: [[1 #"a" 4 "d" 7 "g" 11] [2 #"b" 5 "e" 8 "h" 12] [3 #"c" 6 "f" 9 "i" 13]]
+    ys1: [1 2 3]
+    ys2: "abc"
+    ys3: [4 5 6]
+    ys4: ["d" "e" "f"]
+    ys5: [7 8 9]
+    ys6: ["g" "h" "i"]
+    ys7: [11 12 13]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6 ys7]
+    zss: unzip7 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[string!] [string!] [string!] [string!] [string!] [string!] [string!]]"
+    xss: [["a" "b" "c" "d" "e" "f" "g"] ["bc" "cd" "de" "ef" "gh" "ij" "hi"] ["def" "ghi" "jkl" "mno" "pqr" "stu" "vwx"]]
+    ys1: ["a" "bc" "def"]
+    ys2: ["b" "cd" "ghi"]
+    ys3: ["c" "de" "jkl"]
+    ys4: ["d" "ef" "mno"]
+    ys5: ["e" "gh" "pqr"]
+    ys6: ["f" "ij" "stu"]
+    ys7: ["g" "hi" "vwx"]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6 ys7]
+    zss: unzip7 xss
+    --assert* [yss == zss]
+
+--test-- "[[string! integer! string! integer! string! integer! string!]] -> [[string!] [integer!] [string!] [integer! string! integer!] [string!]]"
+    xss: [["a" 1 "d" 4 "g" 7 "j"] ["bc" 2 "e" 5 "h" 8 "k"] ["def" 3 "f" 6 "i" 9 "l"]]
+    ys1: ["a" "bc" "def"]
+    ys2: [1 2 3]
+    ys3: ["d" "e" "f"]
+    ys4: [4 5 6]
+    ys5: ["g" "h" "i"]
+    ys6: [7 8 9]
+    ys7: ["j" "k" "l"]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6 ys7]
+    zss: unzip7 xss
+    --assert* [yss == zss]
+
+--test-- "[[string!]] -> [[char!] [char!] [char!] [char!] [char!] [char!] [char!]]"
+    xss: [[#"a" #"1" #"d" #"4" #"g" #"j" #"m"] [#"b" #"2" #"e" #"5" #"h" #"k" #"n"] [#"c" #"3" #"f" #"6" #"i" #"l" #"o"]]
+    ys1: "abc"
+    ys2: "123"
+    ys3: "def"
+    ys4: "456"
+    ys5: "ghi"
+    ys6: "jkl"
+    ys7: "mno"
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6 ys7]
+    zss: unzip7 xss
+    --assert* [yss == zss]
+
+--test-- "[[[integer!]]] -> [[integer!] [integer!] [integer!] [integer!] [string!] [string!] [string!]]"
+    xss: [[[1] [4] [7] [10] [13] [16] [19]] [[2] [5] [8] [11] [14] [17] [20]] [[3] [6] [9] [12] [15] [18] [21]]]
+    ys1: [[1] [2] [3]]
+    ys2: [[4] [5] [6]]
+    ys3: [[7] [8] [9]]
+    ys4: [[10] [11] [12]]
+    ys5: [[13] [14] [15]]
+    ys6: [[16] [17] [18]]
+    ys7: [[19] [20] [21]]
+    yss: reduce [ys1 ys2 ys3 ys4 ys5 ys6 ys7]
+    zss: unzip7 xss
+    --assert* [yss == zss]
+===end-group===
+
 ===start-group=== "sortBy"
 
 --test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"

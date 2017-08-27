@@ -1089,6 +1089,133 @@ zipWith7: function [
     return either (all (map :char? rs)) [concat (map :to-string rs)][rs]
 ]
 
+unzippable?: function [
+    xss [series!]
+][
+    either (empty? xss) [
+        true
+    ][
+        ts: map :type? xss
+        first
+    ]
+]
+
+normalize-series: func [xs][either (all (map :char? xs)) [concat (map :to-string xs)][xs]]
+
+unzip: function [
+    "transforms a list of pairs into a list of first components and a list of second components."
+    xss [series!]
+][
+    rs1: copy []
+    rs2: copy []
+    len: length? xss
+    repeat i :len [
+        rs1: rs1 ++ (reduce [xss/:i/1])
+        rs2: rs2 ++ (reduce [xss/:i/2])
+    ]
+    return map :normalize-series (reduce [rs1 rs2])
+]
+
+unzip3: function [
+    "takes a list of triples and returns three lists, analogous to unzip."
+    xss [series!]
+][
+    rs1: copy []
+    rs2: copy []
+    rs3: copy []
+    len: length? xss
+    repeat i :len [
+        rs1: rs1 ++ (reduce [xss/:i/1])
+        rs2: rs2 ++ (reduce [xss/:i/2])
+        rs3: rs3 ++ (reduce [xss/:i/3])
+    ]
+    return map :normalize-series (reduce [rs1 rs2 rs3])
+]
+
+unzip4: function [
+    "takes a list of triples and returns four lists, analogous to unzip."
+    xss [series!]
+][
+    rs1: copy []
+    rs2: copy []
+    rs3: copy []
+    rs4: copy []
+    len: length? xss
+    repeat i :len [
+        rs1: rs1 ++ (reduce [xss/:i/1])
+        rs2: rs2 ++ (reduce [xss/:i/2])
+        rs3: rs3 ++ (reduce [xss/:i/3])
+        rs4: rs4 ++ (reduce [xss/:i/4])
+    ]
+    return map :normalize-series (reduce [rs1 rs2 rs3 rs4])
+]
+
+unzip5: function [
+    "takes a list of triples and returns five lists, analogous to unzip."
+    xss [series!]
+][
+    rs1: copy []
+    rs2: copy []
+    rs3: copy []
+    rs4: copy []
+    rs5: copy []
+    len: length? xss
+    repeat i :len [
+        rs1: rs1 ++ (reduce [xss/:i/1])
+        rs2: rs2 ++ (reduce [xss/:i/2])
+        rs3: rs3 ++ (reduce [xss/:i/3])
+        rs4: rs4 ++ (reduce [xss/:i/4])
+        rs5: rs5 ++ (reduce [xss/:i/5])
+    ]
+    return map :normalize-series (reduce [rs1 rs2 rs3 rs4 rs5])
+]
+
+unzip6: function [
+    "takes a list of triples and returns six lists, analogous to unzip."
+    xss [series!]
+][
+    rs1: copy []
+    rs2: copy []
+    rs3: copy []
+    rs4: copy []
+    rs5: copy []
+    rs6: copy []
+    len: length? xss
+    repeat i :len [
+        rs1: rs1 ++ (reduce [xss/:i/1])
+        rs2: rs2 ++ (reduce [xss/:i/2])
+        rs3: rs3 ++ (reduce [xss/:i/3])
+        rs4: rs4 ++ (reduce [xss/:i/4])
+        rs5: rs5 ++ (reduce [xss/:i/5])
+        rs6: rs6 ++ (reduce [xss/:i/6])
+    ]
+    return map :normalize-series (reduce [rs1 rs2 rs3 rs4 rs5 rs6])
+]
+
+unzip7: function [
+    "takes a list of triples and returns seven lists, analogous to unzip."
+    xss [series!]
+][
+    rs1: copy []
+    rs2: copy []
+    rs3: copy []
+    rs4: copy []
+    rs5: copy []
+    rs6: copy []
+    rs7: copy []
+    len: length? xss
+    repeat i :len [
+        rs1: rs1 ++ (reduce [xss/:i/1])
+        rs2: rs2 ++ (reduce [xss/:i/2])
+        rs3: rs3 ++ (reduce [xss/:i/3])
+        rs4: rs4 ++ (reduce [xss/:i/4])
+        rs5: rs5 ++ (reduce [xss/:i/5])
+        rs6: rs6 ++ (reduce [xss/:i/6])
+        rs7: rs7 ++ (reduce [xss/:i/7])
+    ]
+    return map :normalize-series (reduce [rs1 rs2 rs3 rs4 rs5 rs6 rs7])
+]
+
 groupBy: function [
     "the non-overloaded version of group."
     f [any-function!]
