@@ -4064,6 +4064,46 @@ Red [
 
 ===end-group===
 
+===start-group=== "delete'"
+
+--test-- "[string!] -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: ["abc" "def"]
+    zss: delete' "abcd" xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: ["abc" "def"]
+    zss: delete' "def" xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: ["def" "abc"]
+    zss: delete' "abc" xss
+    --assert* [yss == zss]
+
+--test-- "string! -> string! 1"
+    xs: "abc"
+    ys: "ac"
+    zs: delete' #"b" xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 2"
+    xs: "abcABC"
+    ys: "abcBC"
+    zs: delete' #"A" xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 3"
+    xs:  "a b c d"
+    ys:  "ab c d"
+    zs:  delete' space xs
+    --assert* [ys == zs]
+
+===end-group===
+
 ===start-group=== "sortBy"
 
 --test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"

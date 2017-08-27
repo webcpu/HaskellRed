@@ -1221,16 +1221,19 @@ unzip7: function [
 lines: function [
     xs [string!]
 ][
+    "breaks a string up into a list of strings at newline characters. The resulting strings do not contain newlines."
     split xs "^(line)"
 ]
 
 words: function [
+    "breaks a string up into a list of words, which were delimited by white space."
     xs [string!]
 ][
     split (trim/lines xs) " "
 ]
 
 unlines: function [
+    "an inverse operation to lines. It joins lines, after appending a terminating newline to each."
     xss [series!]
 ][
     either none == (all (map :string? xss)) [
@@ -1241,6 +1244,7 @@ unlines: function [
 ]
 
 unwords: function [
+    "an inverse operation to words. It joins words with separating spaces."
     xss [series!]
 ][
     either none == (all (map :string? xss)) [
@@ -1252,9 +1256,20 @@ unwords: function [
 
 ;;"Set" operations
 nub: function [
+    "removes duplicate elements from a list. In particular, it keeps only the first occurrence of each element. (The name nub means `essence'.) It is a special case of nubBy, which allows the programmer to supply their own equality test."
     xs [series!]
 ][
     unique/case xs
+]
+
+delete': function [
+    " removes the first occurrence of x from its list argument."
+    x
+    xs' [series!]
+][
+    xs: copy xs'
+    rs: find/case xs x
+    either rs == none [xs][head remove rs]
 ]
 
 groupBy: function [
