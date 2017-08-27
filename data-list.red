@@ -1216,6 +1216,47 @@ unzip7: function [
     return map :normalize-series (reduce [rs1 rs2 rs3 rs4 rs5 rs6 rs7])
 ]
 
+;;Special lists
+;;Functions on strings
+lines: function [
+    xs [string!]
+][
+    split xs "^(line)"
+]
+
+words: function [
+    xs [string!]
+][
+    split (trim/lines xs) " "
+]
+
+unlines: function [
+    xss [series!]
+][
+    either none == (all (map :string? xss)) [
+        none
+    ][
+        concat map func [xs][xs ++ "^(line)"] xss
+    ]
+]
+
+unwords: function [
+    xss [series!]
+][
+    either none == (all (map :string? xss)) [
+        none
+    ][
+        concat intersperse " " xss
+    ]
+]
+
+;;"Set" operations
+nub: function [
+    xs [series!]
+][
+    unique/case xs
+]
+
 groupBy: function [
     "the non-overloaded version of group."
     f [any-function!]

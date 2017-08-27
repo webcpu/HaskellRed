@@ -3934,6 +3934,136 @@ Red [
     --assert* [yss == zss]
 ===end-group===
 
+;;Special lists
+;;Functions on strings
+
+===start-group=== "lines"
+
+--test-- "string! -> [string!] 1"
+    xs:  "abc^(line)def^(line)"
+    yss: ["abc" "def"]
+    zss: lines xs
+    --assert* [yss == zss]
+
+--test-- "string! -> [string!] 2"
+    xs:  "abc^(line)def^(line)^(line)"
+    yss: ["abc" "def" ""]
+    zss: lines xs
+    --assert* [yss == zss]
+
+--test-- "string! -> [string!] 3"
+    xs:  "abc"
+    yss: ["abc"]
+    zss: lines xs
+    --assert* [yss == zss]
+
+===end-group===
+
+===start-group=== "words"
+
+--test-- "string! -> [string!] 1"
+    xs:  "abcdef"
+    yss: ["abcdef"]
+    zss: words xs
+    --assert* [yss == zss]
+
+--test-- "string! -> [string!] 2"
+    xs:  "abc def"
+    yss: ["abc" "def"]
+    zss: words xs
+    --assert* [yss == zss]
+
+--test-- "string! -> [string!] 3"
+    xs:  "abc def  "
+    yss: ["abc" "def"]
+    zss: words xs
+    --assert* [yss == zss]
+
+===end-group===
+
+===start-group=== "unlines"
+--test-- "[string!] -> string! 1"
+    xss: ["abc" "def"]
+    ys:  "abc^(line)def^(line)"
+    zs:  unlines xss
+    --assert* [ys == zs]
+
+--test-- "[string!] -> string! 2"
+    xss: ["abc" "def" ""]
+    ys:  "abc^(line)def^(line)^(line)"
+    zs:  unlines xss
+    --assert* [ys == zs]
+
+--test-- "[string!] -> string! 3"
+    xss: ["abc" "def" #"a"]
+    ys:  none
+    zs:  unlines xss
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "unwords"
+--test-- "[string!] -> string! 1"
+    xss: ["abc" "def"]
+    ys:  "abc def"
+    zs:  unwords xss
+    --assert* [ys == zs]
+
+--test-- "[string!] -> string! 2"
+    xss: ["abc" "def" ""]
+    ys:  "abc def "
+    zs:  unwords xss
+    --assert* [ys == zs]
+
+--test-- "[string!] -> string! 3"
+    xss: ["abc" "def" #"a"]
+    ys:  none
+    zs:  unwords xss
+    --assert* [ys == zs]
+
+===end-group===
+
+;;"Set" operations
+===start-group=== "nub"
+
+--test-- "[string!] -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: ["abc" "def"]
+    zss: nub xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: ["abc" "def"]
+    zss: nub xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: ["abc" "def"]
+    zss: nub xss
+    --assert* [yss == zss]
+
+--test-- "string! -> string! 1"
+    xs: "abcabc"
+    ys: "abc"
+    zs: nub xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 2"
+    xs: "abcABC"
+    ys: "abcABC"
+    zs: nub xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 3"
+    xs:  "a b c d"
+    ys:  "a bcd"
+    zs: nub xs
+    --assert* [ys == zs]
+
+===end-group===
+
 ===start-group=== "sortBy"
 
 --test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
