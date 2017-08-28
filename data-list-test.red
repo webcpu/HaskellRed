@@ -756,6 +756,97 @@ Red [
 
 ===end-group===
 
+===start-group=== "or'"
+
+--test-- "[logic!] -> logic! 1"
+    xs: []
+    y: false
+    z: or' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 2"
+    xs: [false false]
+    y: false
+    z: or' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 3"
+    xs: [false true]
+    y: true
+    z: or' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 4"
+    xs: [true false]
+    y: true
+    z: or' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 5"
+    xs: [true true]
+    print mold all xs
+    y: true
+    z: or' xs
+    --assert* [y == z]
+
+===end-group===
+
+===start-group=== "any'"
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 1"
+    xs: []
+    y: false
+    z: any' func [x][x > 1] xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 2"
+    xs: [1 2 3]
+    y: true
+    z: any' func [x][x > 1] xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 3"
+    xs: [1 2 3]
+    y: false
+    z: any' :negative? xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 4"
+    xs: [1 -2 3]
+    y: true
+    z: any' :negative? xs
+    --assert* [y == z]
+
+===end-group===
+
+===start-group=== "all'"
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 1"
+    xs: []
+    y: true
+    z: all' func [x][x > 1] xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 2"
+    xs: [1 2 3]
+    y: true
+    z: all' func [x][x > 0] xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 3"
+    xs: [1 2 3]
+    y: false
+    z: all' :negative? xs
+    --assert* [y == z]
+
+--test-- "(integer! -> logic!) -> [integer!] -> logic! 4"
+    xs: [1 -2 3]
+    y: true
+    z: all' :integer? xs
+    --assert* [y == z]
+
+===end-group===
+
 ===start-group=== "sum"
 --test-- "[integer!] -> integer!"
     xs1: []

@@ -428,9 +428,51 @@ block-concatMap: function [
 ]
 
 and': function [
+    "returns the conjunction of a container of Bools."
     xs' [series!]
 ][
     either empty? xs [true][none <> (all xs)]
+]
+
+or': function [
+    "returns the disjunction of a container of Bools."
+    xs' [series!]
+][
+    either empty? xs [false][none <> (any xs)]
+]
+
+any': function [
+    "Determines whether any element of the structure satisfies the predicate."
+    f [any-function!]
+    xs' [series!]
+][
+    r: false
+    i: 1
+    while [i <= (length? xs)][
+        if (f xs/:i) [
+            r: true
+            break
+        ]
+        i: i + 1
+    ]
+    return r
+]
+
+all': function [
+    "Determines whether any element of the structure satisfies the predicate."
+    f [any-function!]
+    xs' [series!]
+][
+    r: true
+    i: 1
+    while [i <= (length? xs)][
+        if (true <> (f xs/:i)) [
+            r: false
+            break
+        ]
+        i: i + 1
+    ]
+    return r
 ]
 
 sum: function [
