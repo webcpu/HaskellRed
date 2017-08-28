@@ -24,17 +24,17 @@ divide-matrix: func[xs ys][manipulate-matrix :divide* xs ys]
 /: make op! :divide-matrix
 
 manipulate-matrix: function [
-    f
+    arithmetic-f
     xs
     ys
 ][
-    arithmetic-func: func [xy][f first xy last xy]
+    arithmetic-func: func [xy][arithmetic-f first xy last xy]
     xs': reduce xs
     ys': reduce ys
     case [
         equal-blocks? xs' ys' (map :arithmetic-func (zip xs' ys'))
         inequal-blocks? xs' ys' (do [print (unequal-error-message xs' ys') none])
-        true f xs ys
+        true arithmetic-f xs ys
     ]
 
     ;inequal-blocks? (cause-error 'script 'not-related [xs ys])
@@ -776,21 +776,21 @@ lookup: function [
 ;;Searching with a predicate
 find': function [
     "takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element."
-    f  [any-function!] 
+    predicate-f  [any-function!] 
     xs [series!]
 ][
-    either empty? xs [none][find'* :f xs]
+    either empty? xs [none][find'* :predicate-f xs]
 ]
 
 find'*: function [
-    f   [any-function!] 
+    predicate-f [any-function!] 
     xs' [series!]
 ][
     xs: copy xs'
     found: false
     while [all [(not found) (not tail? xs)]][
         x: first xs
-        found: f x
+        found: predicate-f x
         xs: next xs
     ]
     either found [x][none]
@@ -1351,6 +1351,25 @@ insert': function [
 
 ;;Generalized functions
 ;;User-supplied equality
+nubBy: function [
+    "the non-overloaded version of group."
+    f [any-function!]
+    xs [series!]
+][
+    add-element: function [
+        ys x
+    ][
+        either (find' function [y][do [f :x y]] ys) [
+            ys
+        ][
+            zs: reduce either (char? x) [to-string x][reduce [x]]
+            ys ++ zs
+        ]
+    ]
+    rs: either string? xs [""][[]]
+    foldl :add-element rs xs
+]
+
 groupBy: function [
     "the non-overloaded version of group."
     f [any-function!]
@@ -1380,6 +1399,7 @@ groupBy*: function [
     return zss
 ]
 
+;;User-supplied comparison
 sortBy: function [
     "the non-overloaded version of sort."
     f [any-function!]

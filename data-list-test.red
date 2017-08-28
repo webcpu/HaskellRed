@@ -12,115 +12,8 @@ Red [
 
 ~~~start-file~~~ "data-list"
 
-===start-group=== "+"
+; ===start-group=== "+"
 
---test-- "integer! -> integer! -> integer!"
-    xs1: 2
-    xs2: 1
-    ys: 3
-    zs: xs1 + xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!]"
-    xs1: [4 5 6]
-    xs2: [1 2 3]
-    ys: [5 7 9]
-    zs: xs1 + xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!]"
-    xs1: [1 2 3 7]
-    xs2: [1 2 3]
-    ys: Nothing
-    zs: xs1 + xs2
-    --assert* [ys == zs]
-
-===end-group===
-
-===start-group=== "-"
-
---test-- "integer! -> integer! -> integer!"
-    xs1: 2
-    xs2: 1
-    ys: 1
-    zs: xs1 - xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!]"
-    xs1: [4 5 6]
-    xs2: [1 2 3]
-    ys: [3 3 3]
-    zs: xs1 - xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!]"
-    xs1: [1 2 3 7]
-    xs2: [1 2 3]
-    ys: Nothing
-    zs: xs1 - xs2
-    --assert* [ys == zs]
-
-===end-group===
-
-===start-group=== "*"
-
---test-- "integer! -> integer! -> integer! 1"
-    xs1: 2
-    xs2: 5 
-    ys: 10
-    zs: xs1 * xs2
-    --assert* [ys == zs]
-
---test-- "integer! -> integer! -> integer! 2"
-    xs1: 2 + 7
-    xs2: 5 
-    ys: 45
-    zs: xs1 * xs2
-    --assert* [ys == zs]
-
---test-- "integer! -> integer! -> integer! 3"
-    xs1: add 1 1
-    xs2: 5 
-    ys: 10
-    zs: xs1 * xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!] 1"
-    xs1: [4 5 6]
-    xs2: [1 2 3]
-    ys: [4 10 18]
-    zs: xs1 * xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!] 2"
-    xs1: [1 2 3 7]
-    xs2: [1 2 3]
-    ys: Nothing
-    zs: xs1 * xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!] 3"
-    xs1: [4 + 8 5 6]
-    xs2: [1 2 3]
-    ys: [12 10 18]
-    zs: xs1 * xs2
-    --assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!] 3"
-    ;xs1: [[[[add 1 2 add 3 4]]] [[[add 3 4 add 5 6]]]]
-    ;xs2: [[[[add 1 2 add 3 4]]] [[[add 3 4 add 5 6]]]]
-    ;ys: [[[[6 7]]] [[[7 11]]]]
-    ;zs: xs1 + xs2
-    ;--assert* [ys == zs]
-
---test-- "[integer!] -> [integer!] -> [integer!] 4"
-    xs1: [add 1 3 5 6]
-    xs2: [1 2 3 * 2]
-    ys: [4 10 36]
-    zs: xs1 * xs2
-    --assert* [ys == zs]
-
-===end-group===
 
 ===start-group=== "++"
 --test-- "[integer!] -> [integer!] -> [string!]"
@@ -4316,28 +4209,6 @@ Red [
 
 ===end-group===
 
-===start-group=== "sortBy"
-
---test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
-    xs:  [1 2 3]
-    ys1: [1 2 3]
-    ys2: [3 2 1]
-    zs1: sortBy (func [x y][x < y]) (copy xs)
-    zs2: sortBy (func [x y][x > y]) (copy xs)
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-
---test-- "(char! -> char! -> logic!) -> string! -> string!"
-    xs:  "abc"
-    ys1: "abc"
-    ys2: "cba"
-    zs1: sortBy func [x y][x < y] xs
-    zs2: sortBy func [x y][x > y] xs
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-
-===end-group===
-
 ===start-group=== "insert'"
 
 --test-- "integer! -> [integer!] -> [integer!] 1"
@@ -4381,7 +4252,55 @@ Red [
 ;;Generalized functions
 ;;User-supplied equality
 
-===start-group=== "insertBy"
+===start-group=== "nubBy"
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!] 1"
+    xs: [1 2 3 4 1]
+    ys: [1 2 3 4]
+    zs: nubBy (func [x y][x == y]) xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!] 2"
+    xs: []
+    ys: []
+    zs: nubBy (func [x y][x < y]) xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!] 3"
+    xs: [1 2 3 -1 -2 -3]
+    ys: [1 -1 -2 -3]
+    zs: nubBy (func [x y][all [(positive? x)  (positive? y)]]) xs
+    --assert* [ys == zs]
+
+--test-- "([string!] -> [string!] -> logic!) -> [string!] -> [string!] 1"
+    xs: ["ab" "cd" "ab" "ef"]
+    ys: ["ab" "cd" "ef"]
+    zs: nubBy func [x y][x == y] xs
+    --assert* [ys == zs]
+
+--test-- "([string!] -> [string!] -> logic!) -> [string!] -> [string!] 2"
+    xs: [""]
+    ys: [""]
+    zs: nubBy (func [x y][x == y]) xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! -> [[string!]] 1"
+    xs: "abcdd"
+    ys: "abcd"
+    zs: nubBy func [x y][x == y] xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! -> [[string!]] 2"
+    xs: ""
+    ys: ""
+    zs: nubBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+===end-group===
+
+;;User-supplied comparison
+
+===start-group=== "sortBy"
 
 --test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
     xs:  [1 2 3]
@@ -4392,7 +4311,7 @@ Red [
     --assert* [ys1 == zs1]
     --assert* [ys2 == zs2]
 
---test-- "string! -> string! -> [[string!]]"
+--test-- "(char! -> char! -> logic!) -> string! -> string!"
     xs:  "abc"
     ys1: "abc"
     ys2: "cba"
