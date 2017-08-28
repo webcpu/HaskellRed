@@ -120,12 +120,10 @@ map: function [
     ]
 ]
 
-;--reverse is defined in Red, use reverse instead.
-reverse*: :reverse
-reverse: function [
+reverse': function [
     xs [series!]
 ][
-    reverse* copy xs
+    reverse copy xs
 ]
 
 intersperse: function [
@@ -640,7 +638,7 @@ dropWhileEnd: function [
     p [any-function!]
     xs [series!]
 ][
-    reverse (dropWhile :p (reverse xs))
+    reverse' (dropWhile :p (reverse' xs))
 ]
 
 span: function [
@@ -696,7 +694,7 @@ tails: function [
     "returns all final segments of the argument, longest first."
     xs [series!]
 ][
-    reverse (map :reverse (inits (reverse xs)))
+    reverse' (map :reverse' (inits (reverse xs)))
 ]
 
 isPrefixOf: function [
@@ -714,7 +712,7 @@ isSuffixOf: function [
     ys [series!]
 ][
     n: length? xs
-    (reverse xs) == (take' n (reverse ys))
+    (reverse' xs) == (take' n (reverse' ys))
 ]
 
 isInfixOf: function [
@@ -1272,6 +1270,87 @@ delete': function [
     either rs == none [xs][head remove rs]
 ]
 
+union': function [
+    "returns the list union of the two lists."
+    xs' [series!]
+    ys' [series!]
+][
+    illegal-parameters?: function [us vs][all [string? us series? vs (not string? vs)]]
+    either any [(illegal-parameters? xs' ys') (illegal-parameters? ys' xs')][
+        none
+    ][
+        union'* xs' ys'
+    ]
+]
+
+union'*: function [
+    xs' [series!]
+    ys' [series!]
+][
+    xs: copy xs'
+    ys: copy ys'
+    f:  func [rs y] [either elem y xs [rs][rs ++ reduce [y]]]
+    foldl :f xs ys
+]
+
+intersect': function [
+    "takes the list intersection of two lists."
+    xs' [series!]
+    ys' [series!]
+][
+    illegal-parameters?: function [us vs][all [string? us series? vs (not string? vs)]]
+    either any [(illegal-parameters? xs' ys') (illegal-parameters? ys' xs')][
+        none
+    ][
+        intersect'* xs' ys'
+    ]
+]
+
+intersect'*: function [
+    xs' [series!]
+    ys' [series!]
+][
+    either ((length? xs') > (length? ys')) [
+        xs: copy xs'
+        ys: copy ys'
+    ][
+        xs: copy ys'
+        ys: copy xs'
+    ]
+    f:  func [rs y] [either elem y xs [rs ++ reduce [y]][rs]]
+    rs: copy either all [string? xs string? ys][""][[]]
+    foldl :f rs ys
+]
+
+;;Ordered lists
+sort': function [
+    "It is a special case of sortBy, which allows the programmer to supply their own comparison function. Elements are arranged from from lowest to highest, keeping duplicates in the order they appeared in the input."
+    xs [series!]
+][
+    sortBy func [x y][x < y] xs
+]
+
+sortOn: function [
+    "Sort a list by comparing the results of a key function applied to each element."
+    f [any-function!]
+    xs [series!]
+][
+    sortBy func [x y][(f x) < (f y)] xs
+]
+
+insert': function [
+    "takes an element and a list and inserts the element into the list at the first position where it is less than or equal to the next element."
+    x'
+    xs' [series!]
+][
+    x:  either scalar? x' [x'][copy x']
+    xs: copy xs'
+    insert xs x
+    return xs
+]
+
+;;Generalized functions
+;;User-supplied equality
 groupBy: function [
     "the non-overloaded version of group."
     f [any-function!]
@@ -1317,5 +1396,7 @@ string-sortBy: function [
     f [any-function!]
     xs [series!]
 ][
-    concat (sort/compare (map :to-string xs) :f)
+    g:  func [x y][f to-char x to-char y]
+    ys: map :to-string xs
+    concat sort/compare ys :g
 ]

@@ -4104,6 +4104,218 @@ Red [
 
 ===end-group===
 
+===start-group=== "union'"
+
+--test-- "[string!] -> [string!] -> [string!] 1"
+    xss1: ["abc" "def"]
+    xss2: ["abc" "ghi"]
+    yss:  ["abc" "def" "ghi"]
+    zss:  union' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] -> [string!] 2"
+    xss1: ["abc" "def" "def"]
+    xss2: ["abc" "def"]
+    yss:  ["abc" "def" "def"]
+    zss:  union' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] -> [string!] 3"
+    xss1: ["abc" "def" "def"]
+    xss2: []
+    yss:  ["abc" "def" "def"]
+    zss:  union' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] -> [string!] 4"
+    xss1: []
+    xss2: ["abc" "def" "def"]
+    yss:  ["abc" "def" "def"]
+    zss:  union' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "string! -> string! -> string! 1"
+    xs1: "abc"
+    xs2: "def"
+    ys: "abcdef"
+    zs:  union' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "string! -> string! -> string! 2"
+    xs1: "abcABC"
+    xs2: "" 
+    ys:  "abcABC"
+    zs: union' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "string! -> string! -> string! 2"
+    xs1: "" 
+    xs2: "abcABC"
+    ys:  "abcABC"
+    zs: union' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "string! -> [integer!] -> string!"
+    xs1: "abc"
+    xs2: [1 2 3]
+    ys:  none
+    zs:  union' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "[integer!] -> string! -> string!"
+    xs1: [1 2 3]
+    xs2: "abc"
+    ys:  none
+    zs:  union' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "[string!] -> [integer!] -> [string | string!]"
+    xs1: ["abc" "def" "def"]
+    xs2: [1 2 3]
+    ys:  ["abc" "def" "def" 1 2 3]
+    zs:  union' xs1 xs2
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "intersect'"
+
+--test-- "[string!] -> [string!] -> [string!] 1"
+    xss1: ["abc" "def"]
+    xss2: ["abc" "ghi"]
+    yss:  ["abc"]
+    zss:  intersect' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] -> [string!] 2"
+    xss1: ["abc" "def" "def"]
+    xss2: ["abc" "def"]
+    yss:  ["abc" "def"]
+    zss:  intersect' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] -> [string!] 3"
+    xss1: ["abc" "def" "def"]
+    xss2: []
+    yss:  []
+    zss:  intersect' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] -> [string!] 4"
+    xss1: []
+    xss2: ["abc" "def" "def"]
+    yss:  []
+    zss:  intersect' xss1 xss2
+    --assert* [yss == zss]
+
+--test-- "string! -> string! -> string! 1"
+    xs1: "abc"
+    xs2: "def"
+    ys:  ""
+    zs:  intersect' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "string! -> string! -> string! 2"
+    xs1: "abcABC"
+    xs2: "" 
+    ys:  ""
+    zs: intersect' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "string! -> string! -> string! 2"
+    xs1: "" 
+    xs2: "abcABC"
+    ys:  ""
+    zs:  intersect' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "string! -> [integer!] -> string!"
+    xs1: "abc"
+    xs2: [1 2 3]
+    ys:  none
+    zs:  intersect' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "[integer!] -> string! -> string!"
+    xs1: [1 2 3]
+    xs2: "abc"
+    ys:  none
+    zs:  intersect' xs1 xs2
+    --assert* [ys == zs]
+
+--test-- "[string!] -> [integer!] -> [string | string!]"
+    xs1: ["abc" "def" "def"]
+    xs2: [1 2 3]
+    ys:  []
+    zs:  intersect' xs1 xs2
+    --assert* [ys == zs]
+
+===end-group===
+
+;;Ordered lists
+
+===start-group=== "sort'"
+
+--test-- "[integer!] -> [integer!]"
+    xs1:  [1 2 3]
+    xs2:  [3 2 1]
+    ys:   [1 2 3]
+    zs1: sort' xs1
+    zs2: sort' xs2
+    --assert* [ys == zs1]
+    --assert* [ys == zs2]
+
+--test-- "[string!] -> [string!]"
+    xs1:  ["abc" "def"]
+    xs2:  ["def" "abc"]
+    ys:   ["abc" "def"]
+    zs1: sort' xs1
+    zs2: sort' xs2
+    --assert* [ys == zs1]
+    --assert* [ys == zs2]
+
+--test-- "string! -> string!"
+    xs:  "abc"
+    ys1: "abc"
+    ys2: "cba"
+    zs1: sort' xs1
+    zs2: sort' xs2
+    --assert* [ys == zs1]
+    --assert* [ys == zs2]
+
+===end-group===
+
+===start-group=== "sortOn"
+
+--test-- "[integer!] -> [integer!]"
+    xs1:  [1 2 3]
+    xs2:  [3 2 1]
+    ys:   [3 2 1]
+    zs1: sortOn func [x][x * -1] xs1
+    zs2: sortOn func [x][x * -1] xs2
+    --assert* [ys == zs1]
+    --assert* [ys == zs2]
+
+--test-- "[string!] -> [string!]"
+    xs1:  ["az" "aa"]
+    xs2:  ["aa" "az"]
+    ys:   ["aa" "az"]
+    zs1: sortOn :reverse' xs1
+    zs2: sortOn :reverse' xs2
+    --assert* [ys == zs1]
+    --assert* [ys == zs2]
+
+--test-- "string! -> string!"
+    xs1:  "abc"
+    xs2:  "cba"
+    ys:   "cba"
+    zs1: sortOn func [x][(to-integer x) * -1] xs1
+    zs2: sortOn func [x][(to-integer x) * -1] xs2
+    --assert* [ys == zs1]
+    --assert* [ys == zs2]
+
+===end-group===
+
 ===start-group=== "sortBy"
 
 --test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
@@ -4125,6 +4337,49 @@ Red [
     --assert* [ys2 == zs2]
 
 ===end-group===
+
+===start-group=== "insert'"
+
+--test-- "integer! -> [integer!] -> [integer!] 1"
+    xs:  [1 2 3]
+    ys:  [0 1 2 3]
+    zs:  insert' 0 xs
+    --assert* [ys == zs]
+
+--test-- "integer! -> [integer!] -> [integer!] 2"
+    xs:  []
+    ys:  [0]
+    zs:  insert' 0 xs
+    --assert* [ys == zs]
+
+--test-- "string! -> [string!] -> [string!] 1"
+    xs:  ["ab" "cd" "ef"]
+    ys:  ["xy" "ab" "cd" "ef"]
+    zs:  insert' "xy" xs
+    --assert* [ys == zs]
+
+--test-- "string! -> [string!] -> [string!] 2"
+    xs:  []
+    ys:  ["xy"]
+    zs:  insert' "xy" xs
+    --assert* [ys == zs]
+
+--test-- "char! -> string! -> string!"
+    xs:  "abcd"
+    ys:  "1abcd"
+    zs:  insert' #"1" xs
+    --assert* [ys == zs]
+
+--test-- "char! -> string! -> string!"
+    xs:  ""
+    ys:  "1"
+    zs:  insert' #"1" xs
+    --assert* [ys == zs]
+
+===end-group===
+
+;;Generalized functions
+;;User-supplied equality
 
 ===start-group=== "insertBy"
 
