@@ -4298,6 +4298,86 @@ Red [
 
 ===end-group===
 
+===start-group=== "deleteBy"
+
+--test-- "[string!] -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: ["abc" "def"]
+    zss: deleteBy func [x y][x == y] "abcd" xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: ["abc" "def"]
+    zss: deleteBy func [x y][x == y] "def" xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: ["def" "abc"]
+    zss: deleteBy func [x y][x == y] "abc" xss
+    --assert* [yss == zss]
+
+--test-- "string! -> string! 1"
+    xs: "abc"
+    ys: "ac"
+    zs: deleteBy func [x y][x == y] #"b" xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 2"
+    xs: "abcABC"
+    ys: "abcBC"
+    zs: deleteBy func [x y][x == y] #"A" xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 3"
+    xs:  "a b c d"
+    ys:  "ab c d"
+    zs: deleteBy func [x y][x == y] space xs
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "deleteFirstsBy"
+
+--test-- "[string!] -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: ["abc" "def"]
+    zss: deleteFirstsBy xss ["abcd"]
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: ["abc" "def"]
+    zss: deleteFirstsBy xss ["def"]
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: ["abc"]
+    zss: deleteFirstsBy xss ["abc" "def"]
+    --assert* [yss == zss]
+
+--test-- "string! -> string! 1"
+    xs: "abc"
+    ys: "a"
+    zs: deleteFirstsBy xs "bc"
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 2"
+    xs: "abcABC"
+    ys: "abcBC"
+    zs: deleteFirstsBy xs "A"
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 3"
+    xs:  "a b c d"
+    ys:  "abc"
+    zs: deleteFirstsBy xs "   d"
+    --assert* [ys == zs]
+
+===end-group===
+
 ;;User-supplied comparison
 
 ===start-group=== "sortBy"

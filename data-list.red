@@ -1352,14 +1352,14 @@ insert': function [
 ;;Generalized functions
 ;;User-supplied equality
 nubBy: function [
-    "the non-overloaded version of group."
+    "behaves just like nub, except it uses a user-supplied equality predicate instead of the overloaded == function"
     f [any-function!]
     xs [series!]
 ][
     add-element: function [
         ys x
     ][
-        either (find' function [y][do [f :x y]] ys) [
+        either (find' function [y][do [f x y]] ys) [
             ys
         ][
             zs: reduce either (char? x) [to-string x][reduce [x]]
@@ -1368,6 +1368,32 @@ nubBy: function [
     ]
     rs: either string? xs [""][[]]
     foldl :add-element rs xs
+]
+
+deleteBy: function [
+    "behaves like delete, but takes a user-supplied equality predicate."
+    f [any-function!]
+    x
+    xs' [series!]
+][
+    xs: copy xs'
+    i: elemIndex x xs
+    case [
+        (i == none) (copy xs)
+        (i == 0) (rest xs)
+        true ((take' i xs) ++ (drop (i + 1) xs))
+    ]
+]
+
+deleteFirstsBy: function [
+    "takes a predicate and two lists and returns the first list with the first occurrence of each element of the second list removed."
+    xs'  [series!]
+    ys'  [series!]
+][
+    xs: copy xs'
+    ys: copy ys'
+    ;deleteFirst: func [zs x][delete' x zs]
+    foldr :delete' xs ys
 ]
 
 groupBy: function [
