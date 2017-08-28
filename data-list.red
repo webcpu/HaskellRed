@@ -427,6 +427,12 @@ block-concatMap: function [
     concat (map :f xs)
 ]
 
+and': function [
+    xs' [series!]
+][
+    either empty? xs [true][none <> (all xs)]
+]
+
 sum: function [
     "computes the sum of the numbers of a structure."
     xs [series!]
@@ -820,7 +826,7 @@ list-index*: function [
     xs [series!]
     i [integer!]
 ][
-   xs/(i + 1) 
+    xs/(i + 1) 
 ]
 !!: make op! :list-index*
 
@@ -1387,13 +1393,35 @@ deleteBy: function [
 
 deleteFirstsBy: function [
     "takes a predicate and two lists and returns the first list with the first occurrence of each element of the second list removed."
+    f    [any-function!]
     xs'  [series!]
     ys'  [series!]
 ][
     xs: copy xs'
     ys: copy ys'
-    ;deleteFirst: func [zs x][delete' x zs]
-    foldr :delete' xs ys
+    deleteFirst: func [zs x][deleteBy :f x zs]
+    foldl :deleteFirst xs ys
+]
+
+unionBy: function [
+    "the non-overloaded version of union."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+][
+    zs: deleteFirstsBy :f (nub ys) xs
+    xs ++ zs
+]
+
+intersectBy: function [
+    "the non-overloaded version of intersect'."
+    f [any-function!]
+    xs [series!]
+    ys [series!]
+][
+    filter func [x][any func [y][f x y] xs] ys 
+    zs: deleteFirstsBy :f (nub ys) xs
+    xs ++ zs
 ]
 
 groupBy: function [

@@ -721,6 +721,41 @@ Red [
     
 ===end-group===
 
+===start-group=== "and'"
+
+--test-- "[logic!] -> logic! 1"
+    xs: []
+    y: true
+    z: and' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 2"
+    xs: [false false]
+    y: false
+    z: and' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 3"
+    xs: [false true]
+    y: false
+    z: and' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 4"
+    xs: [true false]
+    y: false
+    z: and' xs
+    --assert* [y == z]
+
+--test-- "[logic!] -> logic! 5"
+    xs: [true true]
+    print mold all xs
+    y: true
+    z: and' xs
+    --assert* [y == z]
+
+===end-group===
+
 ===start-group=== "sum"
 --test-- "[integer!] -> integer!"
     xs1: []
@@ -4343,37 +4378,78 @@ Red [
 --test-- "[string!] -> [string!] 1"
     xss: ["abc" "def"]
     yss: ["abc" "def"]
-    zss: deleteFirstsBy xss ["abcd"]
+    zss: deleteFirstsBy func [x y][x == y] xss ["abcd"]
     --assert* [yss == zss]
 
 --test-- "[string!] -> [string!] 2"
     xss: ["abc" "def" "def"]
     yss: ["abc" "def"]
-    zss: deleteFirstsBy xss ["def"]
+    zss: deleteFirstsBy func [x y][x == y] xss ["def"]
     --assert* [yss == zss]
 
 --test-- "[string!] -> [string!] 3"
     xss: ["abc" "def" "abc"]
     yss: ["abc"]
-    zss: deleteFirstsBy xss ["abc" "def"]
+    zss: deleteFirstsBy func [x y][x == y] xss ["abc" "def"]
     --assert* [yss == zss]
 
 --test-- "string! -> string! 1"
     xs: "abc"
     ys: "a"
-    zs: deleteFirstsBy xs "bc"
+    zs: deleteFirstsBy func [x y][x == y] xs "bc"
     --assert* [ys == zs]
 
 --test-- "string! -> string! 2"
     xs: "abcABC"
     ys: "abcBC"
-    zs: deleteFirstsBy xs "A"
+    zs: deleteFirstsBy func [x y][x == y] xs "A"
     --assert* [ys == zs]
 
 --test-- "string! -> string! 3"
     xs:  "a b c d"
     ys:  "abc"
-    zs: deleteFirstsBy xs "   d"
+    zs: deleteFirstsBy func [x y][x == y] xs "   d"
+    --assert* [ys == zs]
+
+===end-group===
+
+
+===start-group=== "unionBy"
+
+--test-- "[string!] -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: ["abc" "def" "abcd"]
+    zss: unionBy func [x y][x == y] xss ["abcd"]
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: ["abc" "def" "def"]
+    zss: unionBy func [x y][x == y] xss ["def"]
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: ["abc" "def" "abc"]
+    zss: unionBy func [x y][x == y] xss ["abc" "def"]
+    --assert* [yss == zss]
+
+--test-- "string! -> string! 1"
+    xs: "abc"
+    ys: "abc"
+    zs: unionBy func [x y][x == y] xs "bc"
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 2"
+    xs: "abcABC"
+    ys: "abcABCD"
+    zs: unionBy func [x y][x == y] xs "AD"
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 3"
+    xs:  "a b c d"
+    ys:  "a b c df"
+    zs: unionBy func [x y][x == y] xs "a b cf"
     --assert* [ys == zs]
 
 ===end-group===
