@@ -4304,32 +4304,41 @@ Red [
 
 ===start-group=== "sortOn"
 
---test-- "[integer!] -> [integer!]"
-    xs1:  [1 2 3]
-    xs2:  [3 2 1]
-    ys:   [3 2 1]
-    zs1: sortOn func [x][x * -1] xs1
-    zs2: sortOn func [x][x * -1] xs2
-    --assert* [ys == zs1]
-    --assert* [ys == zs2]
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!] 1"
+    xs: [1 2 3]
+    ys: [3 2 1]
+    zs: sortOn func [x][x * -1] xs
+    --assert* [ys == zs]
 
---test-- "[string!] -> [string!]"
-    xs1:  ["az" "aa"]
-    xs2:  ["aa" "az"]
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!] 2"
+    xs: [3 2 1]
+    ys: [3 2 1]
+    zs: sortOn func [x][x * -1] xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> [string!] 1"
+    xs:  ["az" "aa"]
     ys:   ["aa" "az"]
-    zs1: sortOn :reverse' xs1
-    zs2: sortOn :reverse' xs2
-    --assert* [ys == zs1]
-    --assert* [ys == zs2]
+    zs: sortOn :reverse' xs
+    --assert* [ys == zs]
 
---test-- "string! -> string!"
-    xs1:  "abc"
-    xs2:  "cba"
+--test-- "(string! -> string! -> logic!) -> [string!] -> [string!] 2"
+    xs:  ["aa" "az"]
+    ys:   ["aa" "az"]
+    zs: sortOn :reverse' xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> char! -> logic!) -> string! -> string! 1"
+    xs:  "abc"
     ys:   "cba"
-    zs1: sortOn func [x][(to-integer x) * -1] xs1
-    zs2: sortOn func [x][(to-integer x) * -1] xs2
-    --assert* [ys == zs1]
-    --assert* [ys == zs2]
+    zs: sortOn func [x][(to-integer x) * -1] xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> char! -> logic!) -> string! -> string! 2"
+    xs:  "cba"
+    ys:   "cba"
+    zs: sortOn func [x][(to-integer x) * -1] xs
+    --assert* [ys == zs]
 
 ===end-group===
 
@@ -4626,23 +4635,41 @@ Red [
 ;;User-supplied comparison
 ===start-group=== "sortBy"
 
---test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
-    xs:  [1 2 3]
-    ys1: [1 2 3]
-    ys2: [3 2 1]
-    zs1: sortBy (func [x y][x < y]) (copy xs)
-    zs2: sortBy (func [x y][x > y]) (copy xs)
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!] 1"
+    xs: [1 2 3]
+    ys: [1 2 3]
+    zs: sortBy (func [x y][x < y]) (copy xs)
+    --assert* [ys == zs]
 
---test-- "(char! -> char! -> logic!) -> string! -> string!"
-    xs:  "abc"
-    ys1: "abc"
-    ys2: "cba"
-    zs1: sortBy func [x y][x < y] xs
-    zs2: sortBy func [x y][x > y] xs
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!] 2"
+    xs: [1 2 3]
+    ys: [3 2 1]
+    zs: sortBy (func [x y][x > y]) (copy xs)
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> [string!] 1"
+    xs: ["def" "abc" "ghi"]
+    ys: ["abc" "def" "ghi"]
+    zs: sortBy (func [x y][x < y]) (copy xs)
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> [string!] 2"
+    xs: ["def" "abc" "ghi"]
+    ys: ["ghi" "def" "abc"]
+    zs: sortBy (func [x y][x > y]) (copy xs)
+    --assert* [ys == zs]
+
+--test-- "(char! -> char! -> logic!) -> string! -> string! 1"
+    xs: "abc"
+    ys: "abc"
+    zs: sortBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> char! -> logic!) -> string! -> string! 2"
+    xs: "abc"
+    ys: "cba"
+    zs: sortBy func [x y][x > y] xs
+    --assert* [ys == zs]
 
 ===end-group===
 
@@ -4685,5 +4712,83 @@ Red [
 
 ===end-group===
 
+===start-group=== "maximumBy"
 
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> integer! 1"
+    xs: []
+    ys: none
+    zs: maximumBy :strict-equal? xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> integer! 2"
+    xs: [1]
+    ys: 1
+    zs: maximumBy :strict-equal? xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> integer! 3"
+    xs: [1 2 3 4]
+    ys: 4
+    zs: maximumBy :strict-equal? xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> string! 1"
+    xs: []
+    ys: none
+    zs: maximumBy :strict-equal? xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> string! 2"
+    xs: ["1"]
+    ys: "1"
+    zs: maximumBy :strict-equal? xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> string! 3"
+    xs: ["1" 2 3 4]
+    ys: none
+    zs: maximumBy :strict-equal? xs
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "minimumBy"
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> integer! 1"
+    xs: []
+    ys: none
+    zs: minimumBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> integer! 2"
+    xs: [1]
+    ys: 1
+    zs: minimumBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+--test-- "(integer! -> integer! -> logic!) -> [integer!] -> integer! 3"
+    xs: [1 2 3 4]
+    ys: 1
+    zs: minimumBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> string! 1"
+    xs: []
+    ys: none
+    zs: minimumBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> string! 2"
+    xs: ["1"]
+    ys: "1"
+    zs: minimumBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+--test-- "(string! -> string! -> logic!) -> [string!] -> string! 3"
+    xs: ["1" 2 3 4]
+    ys: none
+    zs: minimumBy func [x y][x < y] xs
+    --assert* [ys == zs]
+
+===end-group===
 ~~~end-file~~~

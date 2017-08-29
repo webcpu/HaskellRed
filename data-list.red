@@ -1533,13 +1533,56 @@ insertBy: function [
 
 indexElemBy*: function [
     f [any-function!]
-    y
+    x
     xs [series!]
 ][
     i: 1
     len: length? xs
     while [i <= len][
-        either f y xs/:i [return (i - 1)][i: i + 1] 
+        either f x xs/:i [return (i - 1)][i: i + 1] 
     ]
     return none
+]
+
+
+maximumBy: function [
+    "the non-overloaded version of maximum."
+    f [any-function!]
+    xs [series!]
+][
+    case [
+        (empty? xs) none
+        (and' (map :number? xs)) (maximumBy* :f xs)
+        (1 == (length nub (map :type? xs))) (maximumBy* :f xs)
+        true none
+    ]
+]
+
+maximumBy*: function [
+    f [any-function!]
+    xs [series!]
+][
+    r: first xs
+    foldl func [r x][either f r x == true [r][x]] r (rest xs)
+]
+
+minimumBy: function [
+    "the non-overloaded version of minimum."
+    f [any-function!]
+    xs [series!]
+][
+    case [
+        (empty? xs) none
+        (and' (map :number? xs)) (minimumBy* :f xs)
+        (1 == (length nub (map :type? xs))) (minimumBy* :f xs)
+        true none
+    ]
+]
+
+minimumBy*: function [
+    f [any-function!]
+    xs [series!]
+][
+    r: first xs
+    foldl func [r x][either true == (f r x) [r][x]] r (rest xs)
 ]
