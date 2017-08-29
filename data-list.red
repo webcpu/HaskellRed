@@ -134,8 +134,11 @@ intersperse: function [
     either 1 >= length? xs [
         xs
     ][
-        f: func [ys x][append ys reduce [x y]]
-        append (foldl :f copy [] (most reduce xs)) reduce [last reduce xs]
+        r: either string? xs [copy ""][copy []]
+        f: func [ys x][ys ++ (reduce [x y])]
+        ys: foldl :f r (most reduce xs)
+        zs: reduce [last reduce xs]
+        ys ++ zs
     ]
 ]
 
@@ -1289,7 +1292,7 @@ unlines: function [
     either none == (all (map :string? xss)) [
         none
     ][
-        concat map func [xs][xs ++ "^(line)"] xss
+        concatMap func [xs][xs ++ "^(line)"] xss
     ]
 ]
 
@@ -1515,7 +1518,7 @@ string-sortBy: function [
     f [any-function!]
     xs [series!]
 ][
-    g:  func [x y][f to-char x to-char y]
+    g:  func [x y][f (to-char x) (to-char y)]
     ys: map :to-string xs
     concat sort/compare ys :g
 ]
