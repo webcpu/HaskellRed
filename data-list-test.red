@@ -749,7 +749,6 @@ Red [
 
 --test-- "[logic!] -> logic! 5"
     xs: [true true]
-    print mold all xs
     y: true
     z: and' xs
     --assert* [y == z]
@@ -784,7 +783,6 @@ Red [
 
 --test-- "[logic!] -> logic! 5"
     xs: [true true]
-    print mold all xs
     y: true
     z: or' xs
     --assert* [y == z]
@@ -1441,53 +1439,53 @@ Red [
 
 ===end-group===
 
-===start-group=== "group"
+; ===start-group=== "group"
 
---test-- "[integer!] -> [[integer!]"
-    xs1: []
-    xs2: [1]
-    xs3: [1 2]
-    xs4: [1 2 3 3 2]
-    xs5: [1 1 2 1]
-    ys1: []
-    ys2: [[1]]
-    ys3: [[1] [2]]
-    ys4: [[1] [2] [3 3] [2]]
-    ys5: [[1 1] [2] [1]]
-     zs1: group xs1
-    zs2: group xs2
-    zs3: group xs3
-    zs4: group xs4
-    zs5: group xs5
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-    --assert* [ys3 == zs3]
-    --assert* [ys4 == zs4]
-    --assert* [ys5 == zs5]
+; --test-- "[integer!] -> [[integer!]"
+;     xs1: []
+;     xs2: [1]
+;     xs3: [1 2]
+;     xs4: [1 2 3 3 2]
+;     xs5: [1 1 2 1]
+;     ys1: []
+;     ys2: [[1]]
+;     ys3: [[1] [2]]
+;     ys4: [[1] [2] [3 3] [2]]
+;     ys5: [[1 1] [2] [1]]
+;      zs1: group xs1
+;     zs2: group xs2
+;     zs3: group xs3
+;     zs4: group xs4
+;     zs5: group xs5
+;     --assert* [ys1 == zs1]
+;     --assert* [ys2 == zs2]
+;     --assert* [ys3 == zs3]
+;     --assert* [ys4 == zs4]
+;     --assert* [ys5 == zs5]
 
---test-- "string! -> [string!]"
-    xs1: ""
-    xs2: "abc"
-    xs3: "abba"
-    xs4: "abcdd"
-    xs5: "aabcdd"
-    ys1: []
-    ys2: ["a" "b" "c"]
-    ys3: ["a" "bb" "a"]
-    ys4: ["a" "b" "c" "dd"]
-    ys5: ["aa" "b" "c" "dd"]
-    zs1: group xs1
-    zs2: group xs2
-    zs3: group xs3
-    zs4: group xs4
-    zs5: group xs5
-    --assert* [ys1 == zs1]
-    --assert* [ys2 == zs2]
-    --assert* [ys3 == zs3]
-    --assert* [ys4 == zs4]
-    --assert* [ys5 == zs5]
+; --test-- "string! -> [string!]"
+;     xs1: ""
+;     xs2: "abc"
+;     xs3: "abba"
+;     xs4: "abcdd"
+;     xs5: "aabcdd"
+;     ys1: []
+;     ys2: ["a" "b" "c"]
+;     ys3: ["a" "bb" "a"]
+;     ys4: ["a" "b" "c" "dd"]
+;     ys5: ["aa" "b" "c" "dd"]
+;     zs1: group xs1
+;     zs2: group xs2
+;     zs3: group xs3
+;     zs4: group xs4
+;     zs5: group xs5
+;     --assert* [ys1 == zs1]
+;     --assert* [ys2 == zs2]
+;     --assert* [ys3 == zs3]
+;     --assert* [ys4 == zs4]
+;     --assert* [ys5 == zs5]
 
-===end-group===
+; ===end-group===
 
 ===start-group=== "inits"
 
@@ -4426,37 +4424,37 @@ Red [
 
 ===start-group=== "deleteBy"
 
---test-- "[string!] -> [string!] 1"
+--test-- "[string!] -> (string! -> string! -> logic!) -> [string!] 1"
     xss: ["abc" "def"]
     yss: ["abc" "def"]
     zss: deleteBy func [x y][x == y] "abcd" xss
     --assert* [yss == zss]
 
---test-- "[string!] -> [string!] 2"
+--test-- "[string!] -> (string! -> string! -> logic!) -> [string!] 2"
     xss: ["abc" "def" "def"]
     yss: ["abc" "def"]
     zss: deleteBy func [x y][x == y] "def" xss
     --assert* [yss == zss]
 
---test-- "[string!] -> [string!] 3"
+--test-- "[string!] -> (string! -> string! -> logic!) -> [string!] 3"
     xss: ["abc" "def" "abc"]
     yss: ["def" "abc"]
     zss: deleteBy func [x y][x == y] "abc" xss
     --assert* [yss == zss]
 
---test-- "string! -> string! 1"
+--test-- "string! -> (char! -> char! -> logic!) -> string! 1"
     xs: "abc"
     ys: "ac"
     zs: deleteBy func [x y][x == y] #"b" xs
     --assert* [ys == zs]
 
---test-- "string! -> string! 2"
+--test-- "string! -> (char! -> char! -> logic!) -> string! 2"
     xs: "abcABC"
     ys: "abcBC"
     zs: deleteBy func [x y][x == y] #"A" xs
     --assert* [ys == zs]
 
---test-- "string! -> string! 3"
+--test-- "string! -> (char! -> char! -> logic!) -> string! 3"
     xs:  "a b c d"
     ys:  "ab c d"
     zs: deleteBy func [x y][x == y] space xs
@@ -4545,8 +4543,87 @@ Red [
 
 ===end-group===
 
-;;User-supplied comparison
+===start-group=== "intersectBy"
 
+--test-- "[string!] -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: []
+    zss: intersectBy func [x y][x == y] xss ["abcd"]
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: ["def" "def"]
+    zss: intersectBy func [x y][x == y] xss ["def"]
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: ["abc" "def" "abc"]
+    zss: intersectBy func [x y][x == y] xss ["abc" "def"]
+    --assert* [yss == zss]
+
+--test-- "string! -> string! 1"
+    xs: "abc"
+    ys: "bc"
+    zs: intersectBy func [x y][x == y] xs "bc"
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 2"
+    xs: "abcABC"
+    ys: "A"
+    zs: intersectBy func [x y][x == y] xs "AD"
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 3"
+    xs:  "a b c d"
+    ys:  "a b c "
+    zs: intersectBy func [x y][x == y] xs "a b cf"
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== "groupBy"
+
+--test-- "[string!] -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: [["abc"] ["def"]]
+    zss: groupBy func [x y][x == y] xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: [["abc"] ["def" "def"]]
+    zss: groupBy func [x y][x == y] xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: [["abc"] ["def"] ["abc"]]
+    zss: groupBy func [x y][x == y] xss
+    --assert* [yss == zss]
+
+--test-- "string! -> string! 1"
+    xs: "abc"
+    ys: ["a" "b" "c"]
+    zs: groupBy func [x y][x == y] xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 2"
+    xs: "abcABC"
+    ys: ["a" "b" "c" "A" "B" "C"]
+    zs: groupBy func [x y][x == y] xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string! 3"
+    xs:  "a b c d"
+    ys:  ["a" " " "b" " " "c" " " "d"]
+    zs: groupBy func [x y][x == y] xs
+    --assert* [ys == zs]
+
+===end-group===
+
+;;User-supplied comparison
 ===start-group=== "sortBy"
 
 --test-- "(integer! -> integer! -> logic!) -> [integer!] -> [integer!]"
@@ -4568,5 +4645,45 @@ Red [
     --assert* [ys2 == zs2]
 
 ===end-group===
+
+===start-group=== "insertBy"
+--test-- "[string!] -> (string! -> string! -> logic!) -> [string!] 1"
+    xss: ["abc" "def"]
+    yss: ["abc" "def" "ghi"]
+    zss: insertBy func [x y][x < y] "ghi" xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> (string! -> string! -> logic!) -> [string!] 2"
+    xss: ["abc" "def" "def"]
+    yss: ["abc" "bcd" "def" "def"]
+    zss: insertBy func [x y][x < y] "bcd" xss
+    --assert* [yss == zss]
+
+--test-- "[string!] -> (string! -> string! -> logic!) -> [string!] 3"
+    xss: ["abc" "def" "abc"]
+    yss: ["abc" "def" "abc" "abc"]
+    zss: insertBy func [x y][x > y] "abc" xss
+    --assert* [yss == zss]
+
+--test-- "(char! -> char! -> logic!) -> char! -> string! 1"
+    xs: "abc"
+    ys: "abbc"
+    zs: insertBy func [x y][x < y] #"b" xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> char! -> logic!) -> char! -> string! 2"
+    xs: "abcABC"
+    ys: "AabcABC"
+    zs: insertBy func [x y][x < y] #"A" xs
+    --assert* [ys == zs]
+
+--test-- "(char! -> char! -> logic!) -> char! -> string! 3"
+    xs:  "a b c d"
+    ys:  " a b c d"
+    zs: insertBy func [x y][x < y] space xs
+    --assert* [ys == zs]
+
+===end-group===
+
 
 ~~~end-file~~~

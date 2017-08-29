@@ -431,6 +431,7 @@ and': function [
     "returns the conjunction of a container of Bools."
     xs' [series!]
 ][
+    xs: copy xs'
     either empty? xs [true][none <> (all xs)]
 ]
 
@@ -438,6 +439,7 @@ or': function [
     "returns the disjunction of a container of Bools."
     xs' [series!]
 ][
+    xs: copy xs'
     either empty? xs [false][none <> (any xs)]
 ]
 
@@ -446,6 +448,7 @@ any': function [
     f [any-function!]
     xs' [series!]
 ][
+    xs: copy xs'
     r: false
     i: 1
     while [i <= (length? xs)][
@@ -463,6 +466,7 @@ all': function [
     f [any-function!]
     xs' [series!]
 ][
+    xs: copy xs'
     r: true
     i: 1
     while [i <= (length? xs)][
@@ -1461,9 +1465,8 @@ intersectBy: function [
     xs [series!]
     ys [series!]
 ][
-    filter func [x][any func [y][f x y] xs] ys 
-    zs: deleteFirstsBy :f (nub ys) xs
-    xs ++ zs
+    intersected?: func [x][any' func [y][f x y] ys]
+    filter :intersected? xs 
 ]
 
 groupBy: function [
@@ -1485,12 +1488,12 @@ groupBy*: function [
     zss: copy []
     xs: copy xs'
     while [0 < (length? xs)][
-        y: first xs
-        ys: takeWhile (func [x][f :y x]) (rest xs)
-        xs: drop (length? (copy ys)) (rest xs)
-        ys': either (char? y) [to-string y][reduce [y]]
-        yss: reduce [ys' ++ ys]
-        zss: either (empty? ys) [zss ++ (reduce [ys'])][zss ++ yss]
+        y:   first xs
+        ys:  takeWhile (func [x][f y x]) (rest xs)
+        xs:  drop (length? ys) (rest xs)
+        zs: either (char? y) [to-string y][reduce [y]]
+        yss: reduce [zs ++ ys]
+        zss: either (empty? ys) [zss ++ (reduce [zs])][zss ++ yss]
     ]
     return zss
 ]
@@ -1515,4 +1518,28 @@ string-sortBy: function [
     g:  func [x y][f to-char x to-char y]
     ys: map :to-string xs
     concat sort/compare ys :g
+]
+
+insertBy: function [
+    "the non-overloaded version of insert'."
+    f [any-function!]
+    x
+    xs [series!]
+][
+    i: indexElemBy* :f x xs
+    ys: either char? x [to-string x][reduce [x]]
+    either i == none [xs ++ ys][(take' i xs) ++ ys ++ (drop i xs)]
+]
+
+indexElemBy*: function [
+    f [any-function!]
+    y
+    xs [series!]
+][
+    i: 1
+    len: length? xs
+    while [i <= len][
+        either f y xs/:i [return (i - 1)][i: i + 1] 
+    ]
+    return none
 ]
