@@ -1682,132 +1682,174 @@ Red [
     --assert* [ys5 == zs5]
 
 
---test-- "string! -> string! -> [[string!]]"
+--test-- "string! -> string! -> string! 1"
     xs:  "abc"
     ys1: "abc"
-    ys2: "bc"
-    ys3: "c"
-    ys4: ""
-    ys5: Nothing
     zs1: stripPrefix "" xs
-    zs2: stripPrefix "a" xs
-    zs3: stripPrefix "ab" xs
-    zs4: stripPrefix "abc" xs
-    zs5: stripPrefix "abcd" xs
     --assert* [ys1 == zs1]
+
+--test-- "string! -> string! -> string! 2"
+    ys2: "bc"
+    zs2: stripPrefix "a" xs
     --assert* [ys2 == zs2]
+
+--test-- "string! -> string! -> string! 3"
+    ys3: "c"
+    zs3: stripPrefix "ab" xs
     --assert* [ys3 == zs3]
+
+--test-- "string! -> string! -> string! 4"
+    ys4: ""
+    zs4: stripPrefix "abc" xs
     --assert* [ys4 == zs4]
+
+--test-- "string! -> string! -> string! 5"
+    ys5: Nothing
+    zs5: stripPrefix "abcd" xs
     --assert* [ys5 == zs5]
 
 ===end-group===
 
-; ===start-group=== "group"
+===start-group=== "group"
 
-; --test-- "[integer!] -> [[integer!]"
-;     xs1: []
-;     xs2: [1]
-;     xs3: [1 2]
-;     xs4: [1 2 3 3 2]
-;     xs5: [1 1 2 1]
-;     ys1: []
-;     ys2: [[1]]
-;     ys3: [[1] [2]]
-;     ys4: [[1] [2] [3 3] [2]]
-;     ys5: [[1 1] [2] [1]]
-;      zs1: group xs1
-;     zs2: group xs2
-;     zs3: group xs3
-;     zs4: group xs4
-;     zs5: group xs5
-;     --assert* [ys1 == zs1]
-;     --assert* [ys2 == zs2]
-;     --assert* [ys3 == zs3]
-;     --assert* [ys4 == zs4]
-;     --assert* [ys5 == zs5]
+--test-- "[integer!] -> [[integer!] 1"
+    xs1: []
+    ys1: []
+    zs1: group xs1
+    --assert* [ys1 == zs1]
 
-; --test-- "string! -> [string!]"
-;     xs1: ""
-;     xs2: "abc"
-;     xs3: "abba"
-;     xs4: "abcdd"
-;     xs5: "aabcdd"
-;     ys1: []
-;     ys2: ["a" "b" "c"]
-;     ys3: ["a" "bb" "a"]
-;     ys4: ["a" "b" "c" "dd"]
-;     ys5: ["aa" "b" "c" "dd"]
-;     zs1: group xs1
-;     zs2: group xs2
-;     zs3: group xs3
-;     zs4: group xs4
-;     zs5: group xs5
-;     --assert* [ys1 == zs1]
-;     --assert* [ys2 == zs2]
-;     --assert* [ys3 == zs3]
-;     --assert* [ys4 == zs4]
-;     --assert* [ys5 == zs5]
+--test-- "[integer!] -> [[integer!] 2"
+    xs2: [1]
+    ys2: [[1]]
+    zs2: group xs2
+    --assert* [ys2 == zs2]
 
-; ===end-group===
+--test-- "[integer!] -> [[integer!] 3"
+    xs3: [1 2]
+    ys3: [[1] [2]]
+    zs3: group xs3
+    --assert* [ys3 == zs3]
+
+--test-- "[integer!] -> [[integer!] 4"
+    xs4: [1 2 3 3 2]
+    ys4: [[1] [2] [3 3] [2]]
+    zs4: group xs4
+    --assert* [ys4 == zs4]
+
+--test-- "[integer!] -> [[integer!] 5"
+    xs5: [1 1 2 1]
+    ys5: [[1 1] [2] [1]]
+    zs5: group xs5
+    --assert* [ys5 == zs5]
+
+--test-- "string! -> [string!] 1"
+    xs1: ""
+    ys1: []
+    zs1: group xs1
+    --assert* [ys1 == zs1]
+
+--test-- "string! -> [string!] 2"
+    xs2: "abc"
+    ys2: ["a" "b" "c"]
+    zs2: group xs2
+    --assert* [ys2 == zs2]
+
+--test-- "string! -> [string!] 3"
+    xs3: "abba"
+    ys3: ["a" "bb" "a"]
+    zs3: group xs3
+    --assert* [ys3 == zs3]
+
+--test-- "string! -> [string!] 4"
+    xs4: "abcdd"
+    ys4: ["a" "b" "c" "dd"]
+    zs4: group xs4
+    --assert* [ys4 == zs4]
+
+--test-- "string! -> [string!] 5"
+    xs5: "aabcdd"
+    ys5: ["aa" "b" "c" "dd"]
+    zs5: group xs5
+    --assert* [ys5 == zs5]
+
+===end-group===
 
 ===start-group=== "inits"
 
---test-- "[integer!] -> [[integer!]"
+--test-- "[integer!] -> [[integer!] 1"
     xs1: []
-    xs2: [1]
-    xs3: [1 2]
-    xs4: [1 2 3]
     ys1: [[]]
-    ys2: [[] [1]]
-    ys3: [[] [1] [1 2]]
-    ys4: [[] [1] [1 2] [1 2 3]]
     zs1: inits xs1
-    zs2: inits xs2
-    zs3: inits xs3
-    zs4: inits xs4
     --assert* [ys1 == zs1]
+
+--test-- "[integer!] -> [[integer!] 2"
+    xs2: [1]
+    ys2: [[] [1]]
+    zs2: inits xs2
     --assert* [ys2 == zs2]
+
+--test-- "[integer!] -> [[integer!] 3"
+    xs3: [1 2]
+    ys3: [[] [1] [1 2]]
+    zs3: inits xs3
     --assert* [ys3 == zs3]
+
+--test-- "[integer!] -> [[integer!] 4"
+    xs4: [1 2 3]
+    ys4: [[] [1] [1 2] [1 2 3]]
+    zs4: inits xs4
     --assert* [ys4 == zs4]
 
---test-- "string! -> [string!]"
+--test-- "string! -> [string!] 1"
     xs1: ""
-    xs2: "a"
-    xs3: "ab"
-    xs4: "abc"
     ys1: [""]
-    ys2: ["" "a"]
-    ys3: ["" "a" "ab"]
-    ys4: ["" "a" "ab" "abc"]
     zs1: inits xs1
-    zs2: inits xs2
-    zs3: inits xs3
-    zs4: inits xs4
     --assert* [ys1 == zs1]
+
+--test-- "string! -> [string!] 2"
+    xs2: "a"
+    ys2: ["" "a"]
+    zs2: inits xs2
     --assert* [ys2 == zs2]
+
+--test-- "string! -> [string!] 3"
+    xs3: "ab"
+    ys3: ["" "a" "ab"]
+    zs3: inits xs3
     --assert* [ys3 == zs3]
+
+--test-- "string! -> [string!] 4"
+    xs4: "abc"
+    ys4: ["" "a" "ab" "abc"]
+    zs4: inits xs4
     --assert* [ys4 == zs4]
 
 ===end-group===
 
 ===start-group=== "tails"
 
---test-- "[integer!] -> [[integer!]"
+--test-- "[integer!] -> [[integer!] 1"
     xs1: []
-    xs2: [1]
-    xs3: [1 2]
-    xs4: [1 2 3]
     ys1: [[]]
-    ys2: [[1] []]
-    ys3: [[1 2] [2] []]
-    ys4: [[1 2 3] [2 3] [3] []]
     zs1: tails xs1
-    zs2: tails xs2
-    zs3: tails xs3
-    zs4: tails xs4
     --assert* [ys1 == zs1]
+
+--test-- "[integer!] -> [[integer!] 2"
+    xs2: [1]
+    ys2: [[1] []]
+    zs2: tails xs2
     --assert* [ys2 == zs2]
+
+--test-- "[integer!] -> [[integer!] 3"
+    xs3: [1 2]
+    ys3: [[1 2] [2] []]
+    zs3: tails xs3
     --assert* [ys3 == zs3]
+
+--test-- "[integer!] -> [[integer!] 4"
+    xs4: [1 2 3]
+    ys4: [[1 2 3] [2 3] [3] []]
+    zs4: tails xs4
     --assert* [ys4 == zs4]
 
 --test-- "string! -> [string!]"
@@ -1833,120 +1875,156 @@ Red [
 ;Predicates
 ===start-group=== "isPrefixOf"
 
---test-- "[integer!] -> [integer!] -> logic!"
+--test-- "[integer!] -> [integer!] -> logic! 1"
     xs1: []
-    xs2: [1]
-    xs3: [1 2]
-    xs4: [1 2 3]
     ys1: true
-    ys2: true
-    ys3: true
-    ys4: false
     zs1: isPrefixOf xs1 [1 2 3]
-    zs2: isPrefixOf xs2 [1 2 3]
-    zs3: isPrefixOf xs3 [1 2 3]
-    zs4: isPrefixOf xs4 [1 2]
     --assert* [ys1 == zs1]
+
+--test-- "[integer!] -> [integer!] -> logic! 2"
+    xs2: [1]
+    ys2: true
+    zs2: isPrefixOf xs2 [1 2 3]
     --assert* [ys2 == zs2]
+
+--test-- "[integer!] -> [integer!] -> logic! 3"
+    xs3: [1 2]
+    ys3: true
+    zs3: isPrefixOf xs3 [1 2 3]
     --assert* [ys3 == zs3]
+
+--test-- "[integer!] -> [integer!] -> logic! 4"
+    xs4: [1 2 3]
+    ys4: false
+    zs4: isPrefixOf xs4 [1 2]
     --assert* [ys4 == zs4]
 
---test-- "string! -> [string!]"
+--test-- "string! -> [string!] 1"
     xs1: ""
-    xs2: "a"
-    xs3: "ab"
-    xs4: "abc"
     ys1: true 
-    ys2: true
-    ys3: true
-    ys4: false
     zs1: isPrefixOf xs1 "abc"
-    zs2: isPrefixOf xs2 "abc"
-    zs3: isPrefixOf xs3 "ab"
-    zs4: isPrefixOf xs4 "ab"
     --assert* [ys1 == zs1]
+
+--test-- "string! -> [string!] 2"
+    xs2: "a"
+    ys2: true
+    zs2: isPrefixOf xs2 "abc"
     --assert* [ys2 == zs2]
+
+--test-- "string! -> [string!] 3"
+    xs3: "ab"
+    ys3: true
+    zs3: isPrefixOf xs3 "ab"
     --assert* [ys3 == zs3]
+
+--test-- "string! -> [string!] 4"
+    xs4: "abc"
+    ys4: false
+    zs4: isPrefixOf xs4 "ab"
     --assert* [ys4 == zs4]
 
 ===end-group===
 
 ===start-group=== "isSuffixOf"
 
---test-- "[integer!] -> [integer!] -> logic!"
+--test-- "[integer!] -> [integer!] -> logic! 1"
     xs1: []
-    xs2: [1]
-    xs3: [1 2]
-    xs4: [1 2 3]
     ys1: true
-    ys2: false
-    ys3: false
-    ys4: false
     zs1: isSuffixOf xs1 [1 2 3]
-    zs2: isSuffixOf xs2 [1 2 3]
-    zs3: isSuffixOf xs3 [1 2 3]
-    zs4: isSuffixOf xs4 [1 2]
     --assert* [ys1 == zs1]
+
+--test-- "[integer!] -> [integer!] -> logic! 2"
+    xs2: [1]
+    ys2: false
+    zs2: isSuffixOf xs2 [1 2 3]
     --assert* [ys2 == zs2]
+
+--test-- "[integer!] -> [integer!] -> logic! 3"
+    xs3: [1 2]
+    ys3: false
+    zs3: isSuffixOf xs3 [1 2 3]
     --assert* [ys3 == zs3]
+
+--test-- "[integer!] -> [integer!] -> logic! 4"
+    xs4: [1 2 3]
+    ys4: false
+    zs4: isSuffixOf xs4 [1 2]
     --assert* [ys4 == zs4]
 
---test-- "string! -> [string!]"
+--test-- "string! -> [string!] 1"
     xs1: ""
-    xs2: "a"
-    xs3: "ab"
-    xs4: "abc"
     ys1: true 
-    ys2: false
-    ys3: true
-    ys4: false
     zs1: isSuffixOf xs1 "abc"
-    zs2: isSuffixOf xs2 "abc"
-    zs3: isSuffixOf xs3 "ab"
-    zs4: isSuffixOf xs4 "ab"
     --assert* [ys1 == zs1]
+
+--test-- "string! -> [string!] 2"
+    xs2: "a"
+    ys2: false
+    zs2: isSuffixOf xs2 "abc"
     --assert* [ys2 == zs2]
+
+--test-- "string! -> [string!] 3"
+    xs3: "ab"
+    ys3: true
+    zs3: isSuffixOf xs3 "ab"
     --assert* [ys3 == zs3]
+
+--test-- "string! -> [string!] 4"
+    xs4: "abc"
+    ys4: false
+    zs4: isSuffixOf xs4 "ab"
     --assert* [ys4 == zs4]
 
 ===end-group===
 
 ===start-group=== "isInfixOf"
 
---test-- "[integer!] -> [integer!] -> logic!"
+--test-- "[integer!] -> [integer!] -> logic! 1"
     xs1: []
-    xs2: [1]
-    xs3: [1 2]
-    xs4: [1 2 3]
     ys1: true
-    ys2: true
-    ys3: true 
-    ys4: false
     zs1: isInfixOf xs1 [1 2 3]
-    zs2: isInfixOf xs2 [1 2 3]
-    zs3: isInfixOf xs3 [1 2 3]
-    zs4: isInfixOf xs4 [1 2 4]
     --assert* [ys1 == zs1]
+
+--test-- "[integer!] -> [integer!] -> logic! 2"
+    xs2: [1]
+    ys2: true
+    zs2: isInfixOf xs2 [1 2 3]
     --assert* [ys2 == zs2]
+
+--test-- "[integer!] -> [integer!] -> logic! 3"
+    xs3: [1 2]
+    ys3: true 
+    zs3: isInfixOf xs3 [1 2 3]
     --assert* [ys3 == zs3]
+
+--test-- "[integer!] -> [integer!] -> logic! 4"
+    xs4: [1 2 3]
+    ys4: false
+    zs4: isInfixOf xs4 [1 2 4]
     --assert* [ys4 == zs4]
 
---test-- "string! -> [string!]"
+--test-- "string! -> [string!] 1"
     xs1: ""
-    xs2: "a"
-    xs3: "ab"
-    xs4: "abc"
     ys1: true 
-    ys2: true
-    ys3: true
-    ys4: false
     zs1: isInfixOf xs1 "abc"
-    zs2: isInfixOf xs2 "abc"
-    zs3: isInfixOf xs3 "ab"
-    zs4: isInfixOf xs4 "abd"
     --assert* [ys1 == zs1]
+
+--test-- "string! -> [string!] 2"
+    xs2: "a"
+    ys2: true
+    zs2: isInfixOf xs2 "abc"
     --assert* [ys2 == zs2]
+
+--test-- "string! -> [string!] 3"
+    xs3: "ab"
+    ys3: true
+    zs3: isInfixOf xs3 "ab"
     --assert* [ys3 == zs3]
+
+--test-- "string! -> [string!] 4"
+    xs4: "abc"
+    ys4: false
+    zs4: isInfixOf xs4 "abd"
     --assert* [ys4 == zs4]
 
 ===end-group===
@@ -5063,4 +5141,5 @@ Red [
     --assert* [ys == zs]
 
 ===end-group===
+
 ~~~end-file~~~
