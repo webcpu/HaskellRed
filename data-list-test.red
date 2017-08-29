@@ -12,9 +12,6 @@ Red [
 
 ~~~start-file~~~ "data-list"
 
-; ===start-group=== "+"
-
-
 ===start-group=== "++"
 --test-- "[integer!] -> [integer!] -> [string!]"
     xs1: [1 2 3]

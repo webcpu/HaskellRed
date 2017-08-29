@@ -7,37 +7,11 @@ Red [
     License: "MIT"
 ]
 
-add*: :add
-add-matrix: func [xs ys][manipulate-matrix :add* xs ys]
-+: make op! :add-matrix
-
-subtract*: :subtract
-subtract-matrix: func [xs ys][manipulate-matrix :subtract* xs ys]
--: make op! :subtract-matrix
-
-multiply*: :multiply
-multiply-matrix: func [xs ys][manipulate-matrix :multiply* xs ys]
-*: make op! :multiply-matrix
-
-divide*: :divide
-divide-matrix: func[xs ys][manipulate-matrix :divide* xs ys]
-/: make op! :divide-matrix
-
-manipulate-matrix: function [
-    arithmetic-f
-    xs
-    ys
+plus-block: function [
+    xs [block! string!]
+    ys [block! string!]
 ][
-    arithmetic-func: func [xy][arithmetic-f first xy last xy]
-    xs': reduce xs
-    ys': reduce ys
-    case [
-        equal-blocks? xs' ys' (map :arithmetic-func (zip xs' ys'))
-        inequal-blocks? xs' ys' (do [print (unequal-error-message xs' ys') none])
-        true arithmetic-f xs ys
-    ]
-
-    ;inequal-blocks? (cause-error 'script 'not-related [xs ys])
+    append copy reduce xs reduce ys    
 ]
 
 reduce-deep: function [
@@ -50,28 +24,18 @@ reduce-deep: function [
         (all [block? xs not empty? xs]) map :reduce-deep xs
     ]
 ]
-
-equal-blocks?: func [xs ys][all [(block? xs) (block? ys) ((length? xs) == (length? ys))]] 
-inequal-blocks?: func [xs ys][all [(block? xs) (block? ys) ((length? xs) <> (length? ys))]]
-unequal-error-message: func[xs ys]["Blocks of unequal length in " ++ (mold xs) ++ ", " ++ (mold ys) ++ " cannot be combined"]
-
-plus-block: function [
-    xs [block! string!]
-    ys [block! string!]
-][
-    append copy reduce xs reduce ys    
-]
 ++: make op! :plus-block
 
-;--head is defined in Red, use first instead.
-;--last is defined in Red, use last instead.
-;--tail is defined in Red, use rest instead.
+head': :first
+last': :last
+
 rest: function [
     "Extract the elements after the head of a list, which must be non-empty."
     xs [series!]
 ][
     copy next xs
 ]
+tail': :rest
 
 init: function [
     "Return all the elements of a list except the last one. The list must be non-empty."
@@ -121,6 +85,7 @@ map: function [
 ]
 
 reverse': function [
+    "returns the elements of xs in reverse order."
     xs [series!]
 ][
     reverse copy xs
