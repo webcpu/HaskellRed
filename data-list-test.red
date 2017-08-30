@@ -2,7 +2,7 @@ Red [
     Title:   "Data.List test script"
     Author:  "unchartedworks"
     File: 	 %data-list-test.red
-    Tabs:	   4
+    Tabs:	 4
     Rights:  "unchartedworks. All rights reserved."
     License: "MIT"
 ]

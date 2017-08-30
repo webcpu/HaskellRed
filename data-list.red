@@ -7,6 +7,7 @@ Red [
     License: "MIT"
 ]
 
+;;++
 plus-block: function [
     xs [block! string!]
     ys [block! string!]
@@ -75,10 +76,12 @@ map: function [
     xs [series!]
 ][
     yss: copy []
-    g: function [ys x] [append ys reduce [f x]]
+    g:   function [ys x] [ys ++ (reduce [f x])]
     zss: foldl :g yss xs
-    either all [(string? xs) all (map :char? zss)] [
-        foldl func[y x][y ++ (to-string x)] "" zss
+    should-concat: and' [(string? xs) and' (map :char? zss)] 
+    either should-concat [
+        accum: func[y x][y ++ (to-string x)]
+        foldl :accum "" zss
     ][
         zss
     ]
@@ -96,15 +99,18 @@ intersperse: function [
     y
     xs [series!]
 ][
-    either 1 >= length? xs [
-        xs
-    ][
-        r: either string? xs [copy ""][copy []]
-        f: func [ys x][ys ++ (reduce [x y])]
-        ys: foldl :f r (most reduce xs)
-        zs: reduce [last reduce xs]
-        ys ++ zs
-    ]
+    either 1 >= length? xs [xs][intersperse* y xs]
+]
+
+intersperse*: function [
+    y
+    xs [series!]
+][
+    r: either string? xs [copy ""][copy []]
+    f: func [ys x][ys ++ (reduce [x y])]
+    ys: foldl :f r (most reduce xs)
+    zs: reduce [last reduce xs]
+    ys ++ zs
 ]
 
 transpose: function [
@@ -302,7 +308,9 @@ foldl: function [
     y
     xs [series!]
 ][
-    either empty? xs [y][
+    either empty? xs [
+        y
+    ][
         r: y
         foreach x xs [r: f r x]
         r
