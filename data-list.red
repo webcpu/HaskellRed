@@ -54,7 +54,7 @@ uncons: function [
     "Decompose a list into its first and rest. If the list is empty, returns Nothing. If the list is non-empty, returns Just (x, xs), where x is the head of the list and xs its tail."
     xs [series!]
 ][
-    either 0 == length? xs [
+    either empty? xs [
         Nothing
     ][
         reduce [first xs (rest xs)] 
@@ -1562,3 +1562,23 @@ minimumBy*: function [
     r: first xs
     foldl func [r x][either true == (f r x) [r][x]] r (rest xs)
 ]
+
+left-to-right-compositions: function [x fs][
+    accum: function [y f][
+        g: get-function* f
+        r: reduce [g y]
+        either ((type? first r) == unset!) [break][first r]
+    ]
+    foldl :accum x fs
+]
+
+get-function*: function [f][
+    case [
+        (word? f) (get f)
+        (path? f) (function [x] reduce [f 'x])
+         true (do f)
+    ]
+]
+
+;;"Sequentially compose functions, passing any value produced by the first as an argument to the second."
+>>>=: make op! :left-to-right-compositions

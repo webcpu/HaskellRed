@@ -8,9 +8,35 @@ Red [
 ]
 
 #include %quick-test/quick-test.red
+
+#include %data-list.red
 #include %data-function.red
 
 ~~~start-file~~~ "data-function"
+
+===start-group=== "->"
+
+--test-- "block! -> block! -> function! 1"
+    f: [x] -> [x + 1]
+    g: function [x][x + 1]
+    --assert* [(mold :f) == (mold :g)]
+    
+--test-- "block! -> block! -> function! 2"
+    f: [x y] -> [x + y]
+    g: function [x y][x + y]
+    --assert* [(mold :f) == (mold :g)]
+
+--test-- "block! -> block! -> function! 3"
+    f: [x] -> [y: 1 (x + y)]
+    g: function [x][y: 1 (x + y)]
+    --assert* [(mold :f) == (mold :g)]
+    
+--test-- "block! -> block! -> function! 4"
+    f: [x y] -> [z: 1 (x + y + z)]
+    g: function [x y][z: 1 (x + y + z)]
+    --assert* [(mold :f) == (mold :g)]
+
+===end-group===
 
 ===start-group=== "id"
 --test-- "integer! -> string!"
@@ -42,7 +68,6 @@ Red [
     ys: [1 2 3]
     zs: id xs
     --assert* [ys == zs]
-
 ===end-group===
 
 ===start-group=== "const"
@@ -75,7 +100,6 @@ Red [
     ys: [1 2 3]
     zs: const xs 9
     --assert* [ys == zs]
-
 ===end-group===
 
 ===start-group=== "."
@@ -125,5 +149,46 @@ Red [
     --assert* [ys == zs]
 
 ===end-group===
+
+===start-group=== "&"
+--test-- "[integer!] -> function! -> [string!]"
+    f: function [x][x + 1]
+    x: 3
+    y: 4
+    z: x & :f
+    --assert* [y == z]
+
+--test-- "[integer!] -> [function!] -> [string!]"
+    to-charint: [x] -> [to-integer #"a" + x]
+    to-strings: [xs] -> [map (:to-string . :to-char . :to-charint) xs] 
+    ys: "ABCD"
+    zs: [0 1 2 3] & :to-strings & :concat & :uppercase
+    --assert* [ys == zs]
+
+===end-group===
+
+===start-group=== ">>>="
+--test-- "integer! -> [function!] -> integer!"
+    f: function [x][x + 1]
+    x: 3
+    y: 4
+    z: x >>>= [f]
+    --assert* [y == z]
+
+--test-- "[integer!] -> [any-function!] -> [string!]"
+    to-charints: [xs] -> [map ([x] -> [to-integer #"a" + x]) xs]
+    to-chars:    [xs] -> [map :to-char xs] 
+    to-strings:  function [xs][map :to-string xs]
+    ys: "ABCD"
+    zs: [0 1 2 3] >>>= [to-charints to-chars to-strings concat uppercase]
+    --assert* [ys == zs]
+
+--test-- "path! -> [any-function!] -> integer!"
+    file-path: %data-function-test.red
+    y: 1
+    z: file-path >>>= [read/lines length?]
+    --assert* [y < z]
+ 
+ ===end-group===
 
 ~~~end-file~~~

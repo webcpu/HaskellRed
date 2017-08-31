@@ -7,6 +7,8 @@ Red [
     License: "MIT"
 ]
 
+->: make op! :function
+
 id: function [
     "Identity function"
     x
@@ -38,7 +40,7 @@ flip: function [
     f a b
 ]
 
-postfix: func [
+postfix: function [
     "a reverse application operator. This provides notational convenience."
     x f
 ][

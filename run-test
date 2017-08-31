@@ -1,0 +1,5 @@
+#!/bin/bash
+clear
+RED="/usr/local/bin/red --cli"
+time ${RED} ./all-test.red
+
