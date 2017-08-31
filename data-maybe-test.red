@@ -38,7 +38,28 @@ Red [
     y: Nothing
     z: none
     --assert* [y <> z]
+===end-group===
 
+===start-group=== "maybe"
+--test-- "integer! -> (integer! -> integer!) -> Maybe integer! -> integer! 1"
+    y: 4
+    z: maybe 0 ([x] -> [x + 3]) Just 1
+    --assert* [y == z]
+
+--test-- "integer! -> (integer! -> integer!) -> Maybe integer! -> integer! 2"
+    y: 0
+    z: maybe 0 ([x] -> [x + 3]) Nothing
+    --assert* [y == z]
+
+--test-- "string! -> (integer! -> string!) -> Maybe integer! -> string! 1"
+    y: "A"
+    z: maybe "B" ([x] -> [to-string to-char (x + to-integer #"A")]) Just 0
+    --assert* [y == z]
+
+--test-- "string! -> (integer! -> string!) -> Maybe integer! -> string! 1"
+    y: "B"
+    z: maybe "B" ([x] -> [to-string to-char (x + to-integer #"A")]) Nothing
+    --assert* [y == z]
 ===end-group===
 
 ===start-group=== "isJust"
@@ -129,6 +150,112 @@ Red [
     z: fromMaybe true Nothing
     --assert* [y == z]
 
+===end-group===
+
+===start-group=== "listToMaybe"
+--test-- "[integer!] -> Maybe integer! 1"
+    y: Just 1
+    z: listToMaybe [1 2 3]
+    --assert* [y == z]
+
+--test-- "[integer!] -> Maybe integer! 2"
+    y: Nothing
+    z: listToMaybe []
+    --assert* [y == z]
+
+--test-- "[string!] -> Maybe string! 1"
+    y: Just "abc"
+    z: listToMaybe ["abc" "def"]
+    --assert* [y == z]
+
+--test-- "[string!] -> Maybe string! 2"
+    y: Nothing
+    z: listToMaybe []
+    --assert* [y == z]
+
+--test-- "string! -> Maybe char! 1"
+    y: Just #"a"
+    z: listToMaybe "abc"
+    --assert* [y == z]
+
+--test-- "string! -> Maybe char! 2"
+    y: Nothing
+    z: listToMaybe ""
+    --assert* [y == z]
+===end-group===
+
+===start-group=== "catMaybes"
+--test-- "[Maybe integer!] -> [integer!] 1"
+    ys: [2 3]
+    zs: catMaybes [Nothing Just 2 Just 3]
+    --assert* [y == z]
+
+--test-- "[Maybe integer!] -> [integer!] 2"
+    ys: []
+    zs: catMaybes [Nothing Nothing Nothing]
+    --assert* [y == z]
+
+--test-- "[Maybe integer!] -> [integer!] 3"
+    ys: []
+    zs: catMaybes []
+    --assert* [y == z]
+
+--test-- "[Maybe string!] -> [string!] 1"
+    ys: ["hello" "world"]
+    zs: catMaybes [Just "hello" Nothing Just "world"]
+    --assert* [y == z]
+
+--test-- "[Maybe string!] -> [string!] 2"
+    ys: ["world"]
+    zs: catMaybes [Nothing Just "world"]
+    --assert* [y == z]
+
+--test-- "[Maybe char!] -> string! 1"
+    ys: "abc"
+    zs: catMaybes [Nothing Just #"a" Just #"b" Nothing Just #"c"]
+    --assert* [y == z]
+
+--test-- "[Maybe char!] -> string! 2"
+    ys: "a"
+    zs: catMaybes [Nothing Nothing Just #"a"]
+    --assert* [y == z]
+===end-group===
+
+===start-group=== "mapMaybes"
+--test-- "[Maybe integer!] -> [integer!] 1"
+     f: [x] -> [either x > 2 [Just x][Nothing]]
+    xs: [1 2 3]
+    ys: [1 2]
+    zs: mapMaybes :f xs
+    --assert* [y == z]
+
+--test-- "[Maybe integer!] -> [integer!] 2"
+     f: [x] -> [either x > 2 [Just x][Nothing]]
+    xs: []
+    ys: [1 2]
+    zs: mapMaybes :f xs
+    --assert* [y == z]
+
+--test-- "[Maybe string!] -> [integer!] 1"
+     f: [x] -> [either (length? x) > 2 [Just length? x][Nothing]]
+    xs: ["a" "ab" "abc"]
+    ys: [3]
+    zs: mapMaybes :f xs
+    --assert* [y == z]
+
+--test-- "[Maybe string!] -> [integer!] 2"
+     f: [x] -> [either (length? x) > 2 [Just length? x][Nothing]]
+    xs: ["a" "ab"]
+    ys: [3]
+    zs: mapMaybes :f xs
+    --assert* [y == z]
+
+--test-- "[Maybe string!] -> string"
+     f: [x] -> [either ((:not . :empty?) x) [Just last x][Nothing]]
+    xs: ["a" "ab" "abc"]
+    ys: "abc"
+    zs: mapMaybes :f xs
+    --assert* [y == z]
 ===end-group===
 
 ===start-group=== ">>="
