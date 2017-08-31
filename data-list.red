@@ -55,13 +55,11 @@ uncons: function [
     xs [series!]
 ][
     either empty? xs [
-        Nothing
+        none
     ][
         reduce [first xs (rest xs)] 
     ]
 ]
-
-Nothing: none
 
 length: function [
     "Returns the size/length of a finite structure as an Int. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better."
@@ -698,7 +696,7 @@ stripPrefix*: function [
     ys [series!]
 ][
     n: length? xs
-    either xs == (take' n ys) [drop n ys][Nothing]
+    either xs == (take' n ys) [drop n ys][none]
 ]
 
 group: function [

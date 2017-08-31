@@ -202,13 +202,13 @@ Red [
 
 --test-- "[] -> Maybe"
     xs: []
-    ys: Nothing
+    ys: none
     zs: uncons xs
     --assert* [ys == zs]
 
 --test-- "string! -> Maybe"
     xs: ""
-    ys: Nothing
+    ys: none
     zs: uncons xs
     --assert* [ys == zs]
 
@@ -1674,7 +1674,7 @@ Red [
     --assert* [ys4 == zs4]
 
 --test-- "[integer!] -> [integer!] -> [integer!] 5"
-    ys5: Nothing
+    ys5: none
     zs5: stripPrefix [1 2 3 4] xs
     --assert* [ys5 == zs5]
 
@@ -1701,7 +1701,7 @@ Red [
     --assert* [ys4 == zs4]
 
 --test-- "string! -> string! -> string! 5"
-    ys5: Nothing
+    ys5: none
     zs5: stripPrefix "abcd" xs
     --assert* [ys5 == zs5]
 
@@ -2250,13 +2250,13 @@ Red [
 
 --test-- "integer! -> logic! -> Maybe integer! 1"
     xs: []
-    y: Nothing
+    y: none
     z: find' :negative? xs
     --assert* [y == z]
 
 --test-- "integer! -> logic! -> Maybe integer! 2"
     xs: [1 2 3]
-    y: Nothing
+    y: none
     z: find' :negative? xs
     --assert* [y == z]
 
@@ -2268,19 +2268,19 @@ Red [
 
 --test-- "integer! -> logic! -> [integer!] 2"
     xs: [1 2 3]
-    y: Nothing
+    y: none
     z: find' :negative? xs
     --assert* [y == z]
 
 --test-- "string! -> logic! -> Maybe integer! 1"
     xs: ""
-    y: Nothing
+    y: none
     z: find' :char? xs
     --assert* [y == z]
 
 --test-- "string! -> logic! -> Maybe integer! 2"
     xs: "abc"
-    y: Nothing
+    y: none
     z: find' func [x][x == space] xs
     --assert* [y == z]
 
@@ -2292,7 +2292,7 @@ Red [
 
 --test-- "integer! -> logic! -> [integer!] 2"
     xs: "abc"
-    y: Nothing
+    y: none
     z: find' func [x][x == space] xs
     --assert* [y == z]
 ===end-group===
@@ -2443,7 +2443,7 @@ Red [
 
 --test-- "integer! -> [integer!] -> Maybe integer! 1"
     xs: [1 2 3]
-    y: Nothing
+    y: none
     z: elemIndex 0 xs
     --assert* [y == z]
 
@@ -2467,7 +2467,7 @@ Red [
 
 --test-- "char! -> string! -> Maybe integer! 1"
     xs: "abc"
-    y: Nothing
+    y: none
     z: elemIndex #"f" xs
     --assert* [y == z]
 
@@ -2553,7 +2553,7 @@ Red [
 
 --test-- "(integer! -> logic!) -> [integer!] -> Maybe integer! 1"
     xs: [1 2 3]
-    y: Nothing
+    y: none
     z: findIndex :negative? xs
     --assert* [y == z]
 
@@ -2577,7 +2577,7 @@ Red [
 
 --test-- "char! -> string! -> Maybe integer! 1"
     xs: "abc"
-    y: Nothing
+    y: none
     z: findIndex func [x][x == #"f"] xs
     --assert* [y == z]
 
@@ -2595,7 +2595,7 @@ Red [
 
 --test-- "char! -> string! -> Maybe integer! 4"
     xs: "abc"
-    y: Nothing
+    y: none
     z: findIndex func [x][x > #"c"] xs
     --assert* [y == z]
 
