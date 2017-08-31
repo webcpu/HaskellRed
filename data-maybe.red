@@ -7,7 +7,6 @@ Red [
     License: "MIT"
 ]
 
-
 Nothing: [] -> [make object! [type: 'Nothing]]
 Just: [x] -> [make object! [type: 'Just value: x]]
 
@@ -32,8 +31,8 @@ fromMaybe: [
     m [object!]
 ] -> [
     case [
-        (isNothing x) x
-        (isJust x) (fromJust x)
+        (isNothing m) x
+        (isJust m) (fromJust m)
     ]
 ]
 
