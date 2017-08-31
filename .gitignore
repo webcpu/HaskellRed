@@ -1,2 +1,4 @@
 .DS_Store
 .\#*
+/playground.red
+/play.sh

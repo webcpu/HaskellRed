@@ -1,7 +1,7 @@
 Red [
-    Title:   "HaskellRed"
+    Title:   "Data.Function"
     Author:  "unchartedworks"
-    File: 	 %haskell.red
+    File: 	 %data-function.red
     Tabs:	 4
     Rights:  "unchartedworks. All rights reserved."
     License: "MIT"
