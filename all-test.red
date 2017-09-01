@@ -11,4 +11,5 @@ Red [
 #include %data-list-test.red
 #include %data-function-test.red
 #include %data-maybe-test.red
+#include %data-either-test.red
 
