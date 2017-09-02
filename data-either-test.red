@@ -141,4 +141,21 @@ Red [
     --assert* [ys == zs]
 ===end-group===
 
+===start-group=== "either'"
+--test-- "Either integer! string! -> integer!"
+    f: [x] -> [x + 1]
+    g: [y] -> [uppercase y]
+    y: 4
+    z: either' :f :g (Left 3)
+    --assert* [y == z]
+
+--test-- "Either integer! string! -> string!"
+    f: [x] -> [x + 1]
+    g: [y] -> [uppercase y]
+    y: "ABC"
+    z: either' :f :g (Right "abc")
+    --assert* [y == z]
+
+===end-group===
+
 ~~~end-file~~~

@@ -11,7 +11,6 @@ Red [
 
 #include %data-function.red
 #include %data-list.red
-#include %data-either.red
 #include %prelude.red
 
 ~~~start-file~~~ "prelude"
@@ -84,23 +83,6 @@ Red [
     y: 1 
     z: case [x > 0 1 otherwise -1 (x == 0) 0]
     --assert* [y == z]
-===end-group===
-
-===start-group=== "either'"
---test-- "Either integer! string! -> integer!"
-    f: [x] -> [x + 1]
-    g: [y] -> [uppercase y]
-    y: 4
-    z: either' :f :g (Left 3)
-    --assert* [y == z]
-
---test-- "Either integer! string! -> string!"
-    f: [x] -> [x + 1]
-    g: [y] -> [uppercase y]
-    y: "ABC"
-    z: either' :f :g (Right "abc")
-    --assert* [y == z]
-
 ===end-group===
 
 ===start-group=== "fst"

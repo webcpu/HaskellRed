@@ -46,19 +46,6 @@ otherwise: function [
     true
 ]
 
-either': function [
-    "Case analysis for the Either type. If the value is Left a, apply the first function to a; if it is Right b, apply the second function to b."
-    f [any-function!]
-    g [any-function!]
-    mx [object!]
-][
-    case [
-        (isLeft mx) (f (fromLeft mx))
-        (isRight mx) (g (fromRight mx))
-        otherwise (cause-error 'script 'invalid-arg [mx])
-    ]
-]
-
 fst: function [
     "Extract the first component of a pair."
     xs [pair! series!]
