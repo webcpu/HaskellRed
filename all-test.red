@@ -7,9 +7,11 @@ Red [
     License: "MIT"
 ]
 
-#include %prelude-test.red
-#include %data-list-test.red
-#include %data-function-test.red
-#include %data-maybe-test.red
-#include %data-either-test.red
+#include %haskell.red
 
+isTestFile:       [x]  -> [(isSuffixOf "-test.red" (to-string x)) && (%all-test.red <> x)]
+filterTestFiles:  [xs] -> [filter :isTestFile xs]
+includeFile:      [x]  -> [#include x]
+includeFiles:     [xs] -> [map :includeFile xs]
+
+%./ >>>= [read filterTestFiles includeFiles]

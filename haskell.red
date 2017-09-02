@@ -7,8 +7,7 @@ Red [
     License: "MIT"
 ]
 
-#include %prelude.red
-
-#include %data-list.red
-#include %data-maybe.red
 #include %data-function.red
+#include %data-list.red
+#include %prelude.red
+#include %data-maybe.red
