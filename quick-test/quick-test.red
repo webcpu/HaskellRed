@@ -123,7 +123,7 @@ qt-init-file: func [] [
   assertion: do assertion-block
   --assert assertion
   if not assertion [
-    ;call "osascript -e 'beep'"
+    call "osascript -e 'beep'"
     print-assertion-block assertion-block
   ]
 ]
@@ -133,8 +133,8 @@ print-assertion-block: func [
 ][
   nonOp?: func [x][none == find ops to-string x]
   ops: ["%" "*" "**" "+" "-" "..." "/" "//" "<" "<<" "<=" "<>" "=" "==" "=?" ">" ">=" ">>" ">>>" "and" "is" "or" "xor"]
-  conditional-do: func [x][either nonOp? to-string x [do x][x]]
-  probe map :conditional-do (load form assertion-block)
+  conditional-do: func [x][either nonOp? x [mold (do x)] [form x]]
+  print map :conditional-do (load form assertion-block)
 ]
 
 --assertf~=: func[
