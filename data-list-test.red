@@ -5139,4 +5139,31 @@ Red [
 
 ===end-group===
 
+===start-group=== "swap'"
+
+--test-- "pair! -> pair!"
+    xs: 3x7
+    ys: 7x3
+    zs: swap' xs
+    --assert* [ys == zs]
+
+--test-- "series! -> series!"
+    xs: [1 2]
+    ys: [2 1]
+    zs: swap' xs
+    --assert* [ys == zs]
+
+--test-- "string! -> string!"
+    xs: "ba"
+    ys: "ab"
+    zs: swap' xs
+    --assert* [ys == zs]
+
+--test-- "integer! -> none!"
+    xs: 3
+    ys: none
+    zs: attempt [swap' xs]
+    --assert* [ys == zs]
+===end-group===
+
 ~~~end-file~~~

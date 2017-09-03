@@ -1580,3 +1580,25 @@ get-function*: function [f][
 
 ;;"Sequentially compose functions, passing any value produced by the first as an argument to the second."
 >>>=: make op! :left-to-right-compositions
+
+swap': function [
+    "Swap the components of a pair"
+    xs [series! pair!]
+][
+    case [
+        (pair? xs) (swap* xs)
+        (and' reduce [(series? xs) (2 == length? xs)]) (swap* xs)
+        true (cause-error 'script 'invalid-arg [xs])]
+]
+
+swap*: func [
+    xs [series! pair!]
+][
+    a: first xs
+    b: second xs
+    case [
+        pair? xs (make pair! copy reduce [b a])
+        string? xs (copy rejoin reduce [b a])
+        series? xs (copy reduce [b a])
+    ]
+]

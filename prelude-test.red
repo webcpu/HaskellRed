@@ -339,4 +339,82 @@ Red [
     --assert* [y == z]
 ===end-group===
 
+;;Files
+===start-group=== "doesFileExist"
+--test-- "file! -> logic!"
+    y: true
+    z: doesFileExist %all-test.red
+    --assert* [y == z]
+===end-group===
+
+--test-- "string! -> logic!"
+    y: true
+    z: doesFileExist "all-test.red"
+    --assert* [y == z]
+
+--test-- "string! -> logic!"
+    y: false
+    z: doesFileExist "abcd.red"
+    --assert* [y == z]
+===end-group===
+
+===start-group=== "readFile"
+--test-- "file! -> string!"
+    y: true
+    z: 0 < length? readFile %prelude-test.red
+    --assert* [y == z]
+
+--test-- "string! -> string!"
+    y: true
+    z: 0 < length? readFile "./prelude-test.red"
+    --assert* [y == z]
+
+--test-- "file! -> string!"
+    y: none
+    z: attempt [0 < length? readFile %/a/b/c/d]
+    --assert* [y == z]
+===end-group===
+
+===start-group=== "writeFile"
+--test-- "file! -> void!"
+    path: %abcd.txt
+    y: "hello"
+    z: second reduce [(writeFile path "hello") (readFile path) (removeFile path)]
+    --assert* [y == z]
+
+--test-- "string! -> void!"
+    path: "abcd.txt"
+    y: "hello"
+    z: second reduce [(writeFile path "hello") (readFile path) (removeFile path)]
+    --assert* [y == z]
+===end-group===
+
+===start-group=== "appendFile"
+--test-- "file! -> void!"
+    path: %abcd.txt
+    y: "hellohello"
+    z: third reduce [(appendFile path "hello") (appendFile path "hello") (readFile path) (removeFile path)]
+    --assert* [y == z]
+
+--test-- "string! -> void!"
+    path: "abcd.txt"
+    y: "hellohello"
+    z: third reduce [(appendFile path "hello") (appendFile path "hello") (readFile path) (removeFile path)]
+    --assert* [y == z]
+===end-group===
+
+===start-group=== "doesFileExist"
+--test-- "file! -> void!"
+    path: %abcd.txt
+    y: false
+    z: third reduce [(appendFile path "hello") (removeFile path) (doesFileExist path)]
+    --assert* [y == z]
+
+--test-- "string! -> void!"
+    path: "abcd.txt"
+    y: false
+    z: third reduce [(appendFile path "hello") (removeFile path) (doesFileExist path)]
+    --assert* [y == z]
+===end-group===
+
 ~~~end-file~~~

@@ -9,7 +9,7 @@ Red [
 
 #include %haskell.red
 
-isTestFile:       [x]  -> [(isSuffixOf "-test.red" (to-string x)) && (%all-test.red <> x)]
+isTestFile:       [x]  -> [(isSuffixOf "-test.red" (to-string x)) && (%all-test.red <> x) && (not (isPrefixOf ".#" (to-string x)))]
 filterTestFiles:  [xs] -> [filter :isTestFile xs]
 includeFile:      [x]  -> [#include x]
 includeFiles:     [xs] -> [map :includeFile xs]

@@ -177,3 +177,45 @@ until': function [
     ]
     y 
 ]
+
+;;Files
+doesFileExist: function [
+    "if the argument file exists and is not a directory, and False otherwise"
+    x [file! string!]
+][
+    path: either string? x [to-file x][x]
+    exists? path
+]
+
+readFile: function [
+    "The readFile function reads a file and returns the contents of the file as a string."
+    x [file! string!]
+][
+    read either string? x [to-file x][x]
+]
+
+writeFile: function [
+    "The computation writeFile file str function writes the string str, to the file file."
+    file [file! string!]
+    xs [string!]
+][
+    path: either string? file [to-file file][file]
+    write path xs
+]
+
+appendFile: function [
+    "The computation appendFile file str function appends the string str, to the file file."
+    file [file! string!]
+    xs [string!]
+][
+    path: either string? file [to-file file][file]
+    write/append path xs
+]
+
+removeFile: function [
+    "The computation appendFile file str function appends the string str, to the file file."
+    file [file! string!]
+][
+    path: either string? file [to-file file][file]
+    delete path
+]
