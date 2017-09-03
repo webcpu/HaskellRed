@@ -70,13 +70,3 @@ mapMaybes: [
 ] -> [
     catMaybes map :f xs 
 ]
-
-sequencially-compose*: function [
-    "Sequentially compose two actions, passing any value produced by the first as an argument to the second."
-    x [object!]
-    f [function!]
-][
-    either isJust x [f fromJust x][Nothing]
-]
-
->>=: make op! :sequencially-compose*

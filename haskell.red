@@ -11,3 +11,5 @@ Red [
 #include %data-list.red
 #include %prelude.red
 #include %data-maybe.red
+#include %data-either.red
+#include %control-monad.red
