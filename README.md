@@ -86,7 +86,7 @@ includeFiles:     [xs] -> [map :includeFile xs]
 %./ >>>= [read filterTestFiles includeFiles]
 ```
 
-For more documentation, please refer to Haskell documentation and the test cases in HaskellRed.
+For more documentation, please refer to Haskell documentation and the test cases of HaskellRed.
 
 # Development
 ## Test
