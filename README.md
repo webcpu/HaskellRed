@@ -35,3 +35,8 @@ includeFiles:     [xs] -> [map :includeFile xs]
 
 %./ >>>= [read filterTestFiles includeFiles]
 ```
+
+# Test
+```./run-test```
+
+<img width="401" alt="screen shot 2017-10-30 at 14 24 10" src="https://user-images.githubusercontent.com/4646838/32173165-578a69f8-bd7e-11e7-9267-f8ce070cedd9.png">
