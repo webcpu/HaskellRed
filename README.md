@@ -18,8 +18,10 @@ map :to-string xs
 ```
 
 ### filter
+```
 xs: [1 "2" 3 "4" 5 "6"]
 filter :integer? xs
+```
 
 ```
 [1 3 5]
