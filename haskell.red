@@ -13,3 +13,4 @@ Red [
 #include %data-maybe.red
 #include %data-either.red
 #include %control-monad.red
+#include %data-char.red
