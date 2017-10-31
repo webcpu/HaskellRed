@@ -101,7 +101,7 @@ pred: function [
 ][
     case [
         (number? x) (x - 1)
-        (char? x) (to-char ((to-integer x) - 1))
+        (char? x) && ((to-integer x) > 0) (to-char ((to-integer x) - 1))
         true "none"]
 ]
 
@@ -148,7 +148,7 @@ divMod: function [
     reduce [(divide m n) (mod m n)]
 ]
 
-:toInteger :to-integer
+toInteger: :to-integer
 
 ;;Numeric
 even: function [

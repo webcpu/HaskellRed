@@ -187,6 +187,11 @@ Red [
     y: pred #"="
     z: #"<"
     --assert* [y == z]
+
+--test-- "char! -> char! 3"
+    y: pred (to-char 0)
+    z: "none"
+    --assert* [y == z]
 ===end-group===
 
 ===start-group=== "range"
