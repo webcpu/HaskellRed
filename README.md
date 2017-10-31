@@ -3,7 +3,18 @@
 A functional library for Red programmers.
 
 # Prerequisites
-- Red 0.6.3
+- Red 0.6.3+
+
+# How to use it
+To use HaskellRed, just include haskell.red in your file.
+For instance,
+
+```
+#include %haskell.red
+
+print isControl #"t"
+print map :to-string [1 2 3]
+```
 
 # Examples
 ## Data List
